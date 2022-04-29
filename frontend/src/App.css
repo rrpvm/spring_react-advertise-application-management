@@ -13,3 +13,36 @@ html,body {
 .input-none-border{
   border: none !important;
 }
+
+.row{
+  display: flex !important;
+  justify-content: flex-start !important;
+  margin: 0px !important;
+}
+.customInput{
+  border: 1px solid gray !important; 
+}
+.customInput:focus{
+  border: 1px solid gray !important; 
+}
+.customInput:active{
+  border: 1px solid gray !important; 
+}
+.floating-button{
+  width: 100% !important;
+  margin-top:  auto !important;
+}
+.col{
+  display: flex !important;
+  flex-direction: column !important;
+ 
+}
+.edit-component-footer{
+  margin-top: auto !important;
+  display: flex;
+  justify-content: space-between;
+}
+.edit-component{
+  height: 768px !important;
+  margin-right: auto !important;
+}
