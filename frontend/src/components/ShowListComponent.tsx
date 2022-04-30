@@ -1,8 +1,13 @@
+import { Dispatch, SetStateAction } from "react";
+
 type ListComponentProps = {
     title: string;
     itemsName: Array<string>;
+    floatingButtonName: string,
+    activeItem: string,
+    callback : Dispatch<SetStateAction<string>>,
 }
-export const ShowListComponent: React.FC<ListComponentProps> = ({ title, itemsName }) => {
+export const ShowListComponent: React.FC<ListComponentProps> = ({ title, itemsName,floatingButtonName,activeItem,callback }) => {
     return (
         <div className="card" style={{ width: "100%", margin: "1.5rem",height:'100%' }}>
             <h3 className="text-center">{title}</h3>
@@ -10,11 +15,11 @@ export const ShowListComponent: React.FC<ListComponentProps> = ({ title, itemsNa
             <ul className="list-group list-group-flush">
                 {
                     itemsName.map((item) => {
-                        return (<li className="list-group-item" key={item}>{item}</li>);
+                        return (<li className={activeItem === item ? "list-group-item active" : "list-group-item"} style={{cursor:"pointer",}} key={item} onClick={()=>{callback(item)}}>{item}</li>);
                     })
                 }
             </ul>
-            <button className="btn btn-primary" type="submit" style={{backgroundColor:"#f06292",borderColor:"#f06292"}}>Create new {title.toLocaleLowerCase()}</button>
+            <button className="btn btn-primary" type="submit" style={{backgroundColor:"#f06292",borderColor:"#f06292", marginTop:"auto"}}>Create new {floatingButtonName}</button>
         </div>
     );
 };

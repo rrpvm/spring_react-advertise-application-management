@@ -5,15 +5,16 @@ body {
 *{
   box-sizing: border-box;
 }
-.nav{
-  padding: 10px;
-  background: #f06292 !important;
-  align-items: center;
-}
 .nav-list{
   display: flex;
   align-items: center;
 
+}
+/*BOOTSTRAP CHANGES*/
+.nav{
+  padding: 10px;
+  background: #f06292 !important;
+  align-items: center;
 }
 .nav-wrapper{
   width: 100%;
@@ -22,7 +23,6 @@ body {
   flex-direction: row;
   align-items: center;
 }
-
 .nav-list > li,a{
 color:#fff;
 border-color:#dee2e6 #dee2e6 #fff;
@@ -32,3 +32,17 @@ text-decoration: none;
   text-decoration: none;
   color:#fff;
 }
+.nav-item,
+.nav-link{
+  transition: all .3s;
+}
+
+.list-group,
+.list-group > .active{
+  transition: all .3s;
+}
+.list-group > .active{
+  background-color: #f06292  !important;
+  border-color: #f06292 !important;
+}
+/*CHANGES END*/
