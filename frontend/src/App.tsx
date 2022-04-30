@@ -1,14 +1,17 @@
-
 import './App.css';
-import { NavBar } from './components/NavBar';
-import { Banners } from './layouts/Banners';
-
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import { NavigationBar } from './components/NavigationBar';
 function App() {
   return (
-    <>
-    <NavBar></NavBar>
-    <Banners/>
-    </>
+    <Router>
+      <NavigationBar></NavigationBar>
+      <Routes>
+        <Route path='/' element="HomePage"></Route>
+        <Route path='/banners'  element="BannerPage"></Route>
+        <Route path='/categories'  element="HomePage"></Route>
+        <Route path='*' element="PageNotFound"></Route>
+      </Routes>
+    </Router>
   );
 }
 
