@@ -21,28 +21,35 @@ export const BannerPage: React.FC = () => {
             }
         })
     }
+    function handleSearchEvent(e: string): void {
+        //axios banners;
+        filterBanners(banners.filter(banner => {
+            return banner.name.toLowerCase().indexOf(e) !== -1
+        }))
+    }
     const banners: Array<IBanner> = [
         {
             id: 0,
             name: 'first banner',
             price: 9.99,
-            textField: '',
+            textField: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
             category: [],
         },
         {
             id: 1,
             name: 'second banner',
             price: 19.99,
-            textField: '',
+            textField: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
             category: [],
         },
     ];
     const [selectedBanner, setSelectedBanner] = useState(banners[0]);
+    const [avaliableBanners, filterBanners] = useState(banners);
     return (
         <div className="container">
             <div className="row">
                 <div className="col col-lg-3" style={{ minHeight: '768px' }}>
-                    <ShowListComponent title="Banners" floatingButtonName="banner" itemsName={getNamesFromBannersArray(banners)} callback={handleBannerClick} activeItem={selectedBanner.name}></ShowListComponent>
+                    <ShowListComponent title="Banners" floatingButtonName="banner" itemsName={getNamesFromBannersArray(avaliableBanners)} callback={handleBannerClick} activeItem={selectedBanner.name} onProcessInput={handleSearchEvent}></ShowListComponent>
                 </div>
                 <div className="col col-lg-9" style={{ minHeight: '768px' }}>
                     <ShowItemComponent title={selectedBanner.name}>

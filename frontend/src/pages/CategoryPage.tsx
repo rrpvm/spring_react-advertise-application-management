@@ -21,6 +21,12 @@ export const CategoryPage: React.FC = () => {
             }
         })
     }
+    function handleSearchEvent(e: string) : void {
+        //axios categories;
+        filterCategories(categories.filter(category => {
+            return category.name.toLowerCase().indexOf(e) !== -1
+        }))
+    }
     const categories: Array<ICategory> = [
         {
             id: 0,
@@ -34,11 +40,12 @@ export const CategoryPage: React.FC = () => {
         },
     ];
     const [selectedCategory, setSelectedCategory] = useState(categories[0]);
+    const [avaliableCategories, filterCategories] = useState(categories);
     return (
         <div className="container">
             <div className="row">
                 <div className="col col-lg-3" style={{ minHeight: '768px' }}>
-                    <ShowListComponent title="Category" floatingButtonName="categories" itemsName={getNamesFromCategoriesArray(categories)} callback={handleCategoryClick} activeItem={selectedCategory.name}></ShowListComponent>
+                    <ShowListComponent title="Category" floatingButtonName="categories" itemsName={getNamesFromCategoriesArray(avaliableCategories)} callback={handleCategoryClick} onProcessInput={handleSearchEvent} activeItem={selectedCategory.name}></ShowListComponent>
                 </div>
                 <div className="col col-lg-9" style={{ minHeight: '768px' }}>
                     <ShowItemComponent title="Create new category">
