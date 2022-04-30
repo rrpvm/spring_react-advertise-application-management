@@ -14,16 +14,12 @@ export const BannerPage: React.FC = () => {
         })
         return namesArray;
     }
-    function insertBannerItemLayout(): JSX.Element {
-        let mayProp: IBanner = banners.filter(banner => { return banner.name === selectedBanner })[0];//only 1 result cuz possible only 1 select + unique name
-        let insertElement: JSX.Element = <></>;
-        if (mayProp !== null && mayProp !== undefined) {
-            insertElement = <BannerItemLayout prop={mayProp}></BannerItemLayout>
-        }
-        else {
-            //создать новый баннер -> будет поле для заполнения
-        }
-        return insertElement;
+    function handleBannerClick(selectedBannerName: string): void { // получаем в параметре выбранное имя 
+        banners.forEach(banner => {
+            if (banner.name === selectedBannerName) {
+                setSelectedBanner(banner); // находим и устанавливаем выбранный баннер по имени
+            }
+        })
     }
     const banners: Array<IBanner> = [
         {
@@ -41,17 +37,16 @@ export const BannerPage: React.FC = () => {
             category: [],
         },
     ];
-
-    const [selectedBanner, setSelectedBanner] = useState(banners[0].name);
+    const [selectedBanner, setSelectedBanner] = useState(banners[0]);
     return (
         <div className="container">
             <div className="row">
                 <div className="col col-lg-3" style={{ minHeight: '768px' }}>
-                    <ShowListComponent title="Banners" floatingButtonName="banner" itemsName={getNamesFromBannersArray(banners)} callback={setSelectedBanner} activeItem={selectedBanner}></ShowListComponent>
+                    <ShowListComponent title="Banners" floatingButtonName="banner" itemsName={getNamesFromBannersArray(banners)} callback={handleBannerClick} activeItem={selectedBanner.name}></ShowListComponent>
                 </div>
                 <div className="col col-lg-9" style={{ minHeight: '768px' }}>
-                    <ShowItemComponent title="Create new banner">
-                        {insertBannerItemLayout()}
+                    <ShowItemComponent title={selectedBanner.name}>
+                        <BannerItemLayout prop={selectedBanner} />
                     </ShowItemComponent>
                 </div>
             </div>

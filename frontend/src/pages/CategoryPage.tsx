@@ -7,23 +7,19 @@ import { ICategory } from "../interfaces/ICategory";
 
 
 export const CategoryPage: React.FC = () => {
-    function getNamesFromCategoriesArray(banners: ICategory[]): string[] {//need to be cached/optimized
+    function getNamesFromCategoriesArray(categories: ICategory[]): string[] {//need to be cached/optimized
         let namesArray: string[] = [];
-        banners.forEach(banner => {
-            namesArray.push(banner.name);
+        categories.forEach(categories => {
+            namesArray.push(categories.name);
         })
         return namesArray;
     }
-    function insertCategoryItemLayout(): JSX.Element {
-        let mayProp: ICategory = categories.filter(category => { return category.name === selectedCategory })[0];//only 1 result cuz possible only 1 select + unique name
-        /*let insertElement: JSX.Element = <></>;
-        if (mayProp !== null && mayProp !== undefined) {
-            insertElement = <BannerItemLayout prop={mayProp}></BannerItemLayout>
-        }
-        else {
-            //создать новый баннер -> будет поле для заполнения
-        }*/
-        return (mayProp !== null && mayProp !== undefined) ? <CategoryItemLayout prop={mayProp}></CategoryItemLayout> : <></>;
+    function handleCategoryClick(selectedCategoryName: string): void {
+        categories.forEach(category => {
+            if (category.name === selectedCategoryName) {
+                setSelectedCategory(category);
+            }
+        })
     }
     const categories: Array<ICategory> = [
         {
@@ -37,16 +33,16 @@ export const CategoryPage: React.FC = () => {
             requestId: "Adv",
         },
     ];
-    const [selectedCategory, setSelectedCategory] = useState(categories[0].name);
+    const [selectedCategory, setSelectedCategory] = useState(categories[0]);
     return (
         <div className="container">
             <div className="row">
                 <div className="col col-lg-3" style={{ minHeight: '768px' }}>
-                    <ShowListComponent title="Category" floatingButtonName="categories" itemsName={getNamesFromCategoriesArray(categories)} callback={setSelectedCategory} activeItem={selectedCategory}></ShowListComponent>
+                    <ShowListComponent title="Category" floatingButtonName="categories" itemsName={getNamesFromCategoriesArray(categories)} callback={handleCategoryClick} activeItem={selectedCategory.name}></ShowListComponent>
                 </div>
                 <div className="col col-lg-9" style={{ minHeight: '768px' }}>
                     <ShowItemComponent title="Create new category">
-                        {insertCategoryItemLayout()}
+                        <CategoryItemLayout prop={selectedCategory} />
                     </ShowItemComponent>
                 </div>
             </div>

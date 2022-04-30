@@ -8,15 +8,15 @@ export const BannerItemLayout: React.FC<BannerItemLayoutProp> = ({prop}) => {
         <>
             <li className="list-group-item" style={{ display: "flex" }}>
                 <div style={{ width: "6rem", display: "flex", alignItems: "center", textAlign: "center", }}>Name</div>
-                <input className="form-control" value={prop.name}></input>
+                <input className="form-control" value={prop.name} onChange={()=>{}}></input>
             </li>
             <li className="list-group-item" style={{ display: "flex" }}>
                 <div style={{ width: "6rem", display: "flex", alignItems: "center", textAlign: "center",  }}>Price</div>
-                <input className="form-control" value={prop.price}></input>
+                <input className="form-control" value={prop.price} onChange={()=>{}}></input>
             </li>
             <li className="list-group-item" style={{ display: "flex" }}>
                 <div style={{ width: "6rem", display: "flex", alignItems: "center", textAlign: "center",  }}>Category</div>
-                <input className="form-control" ></input>
+                <input className="form-control" onChange={()=>{}}></input>
             </li>
         </>
     );

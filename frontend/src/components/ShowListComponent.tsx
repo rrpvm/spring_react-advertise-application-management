@@ -1,11 +1,9 @@
-import { Dispatch, SetStateAction } from "react";
-
 type ListComponentProps = {
     title: string;
     itemsName: Array<string>;
     floatingButtonName: string,
     activeItem: string,
-    callback : Dispatch<SetStateAction<string>>,
+    callback :CallableFunction,
 }
 export const ShowListComponent: React.FC<ListComponentProps> = ({ title, itemsName,floatingButtonName,activeItem,callback }) => {
     return (
