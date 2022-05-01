@@ -20,12 +20,15 @@ export const BannerItemLayout: React.FC<BannerItemLayoutProp> = ({ prop }) => {
             {insertItem('Name', () => { }, prop.name)}
             {insertItem('Price', () => { }, prop.price.toString())}
             <li className="list-group-item" style={{ display: "flex", width: "100%" }}>
+                <div style={{ width: "6rem", display: "flex", alignItems: "center", textAlign: "center", }}>Category</div>
                 <MultiSelector uniqueStrings={[]} alreadySelected={prop.categories} ></MultiSelector>
+
             </li>
             <li className="list-group-item" style={{ display: "flex" }}>
                 <div style={{ width: "6rem", display: "flex", alignItems: "center", textAlign: "center", }}>Text field</div>
                 <textarea className="form-control" value={prop.textField} onChange={() => { }} style={{ minHeight: "12rem" }}></textarea>
             </li>
+            
         </>
     );
 };

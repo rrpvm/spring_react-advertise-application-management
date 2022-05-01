@@ -18,6 +18,14 @@ export const BannerPage: React.FC = () => {
         banners.forEach(banner => {
             if (banner.name === selectedBannerName) {
                 setSelectedBanner(banner); // находим и устанавливаем выбранный баннер по имени
+                /*
+                reset multiselector
+                3 ways :
+                1)chain of callbacks ->
+                2)event listener(by events)  
+                3)useEffect           ( my choice 4Head)
+                */
+
             }
         })
     }
@@ -33,7 +41,7 @@ export const BannerPage: React.FC = () => {
             name: 'first banner',
             price: 9.99,
             textField: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-            categories: ['music','shopping','service'],
+            categories: ['music', 'shopping', 'service'],
         },
         {
             id: 1,
@@ -47,14 +55,15 @@ export const BannerPage: React.FC = () => {
     const [avaliableBanners, filterBanners] = useState(banners);
     return (
         <div className="container">
-            <div className="row">
+            <div className="row" style={{ flexWrap: "nowrap" }}>
                 <div className="col col-lg-3" style={{ minHeight: '768px' }}>
                     <ShowListComponent title="Banners" floatingButtonName="banner" itemsName={getNamesFromBannersArray(avaliableBanners)} callback={handleBannerClick} activeItem={selectedBanner.name} onProcessInput={handleSearchEvent}></ShowListComponent>
                 </div>
-                <div className="col col-lg-9" style={{ minHeight: '768px' }}>
+                <div className="col col-lg-9" style={{ minHeight: '768px', margin: "1.5rem" }}>
                     <ShowItemComponent title={selectedBanner.name}>
-                        <BannerItemLayout prop={selectedBanner} />
+                        <BannerItemLayout prop={selectedBanner} />                    
                     </ShowItemComponent>
+
                 </div>
             </div>
         </div>

@@ -1,5 +1,7 @@
 package com.rrpvm.backend.entities;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.List;
 
 public class Banner {
@@ -7,6 +9,6 @@ public class Banner {
     private String name;
     private String textField;
     private Double price;
-    List<Category> linkedCategories;
+    List<String> linkedCategories;//names
     private boolean isDeleted;
 }
