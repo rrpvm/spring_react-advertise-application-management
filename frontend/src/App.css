@@ -53,7 +53,7 @@ text-decoration: none;
   background: #f06292;
 }
 .multiselect-item{
-  padding: 15px 25px;
+  padding: 5px 10px;
   border-top: 1px solid gray; 
   transition: all .3s;
 }

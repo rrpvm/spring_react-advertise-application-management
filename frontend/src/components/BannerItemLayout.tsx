@@ -14,13 +14,16 @@ export const BannerItemLayout: React.FC<BannerItemLayoutProp> = ({ prop }) => {
             </li>
         );
     };
+
     return (
         <>
             {insertItem('Name', () => { }, prop.name)}
             {insertItem('Price', () => { }, prop.price.toString())}
-            <MultiSelector></MultiSelector>
+            <li className="list-group-item" style={{ display: "flex", width: "100%" }}>
+                <MultiSelector uniqueStrings={[]} alreadySelected={prop.categories} ></MultiSelector>
+            </li>
             <li className="list-group-item" style={{ display: "flex" }}>
-                <div style={{ width: "6rem", display: "flex", alignItems: "center", textAlign: "center", }}>Text</div>
+                <div style={{ width: "6rem", display: "flex", alignItems: "center", textAlign: "center", }}>Text field</div>
                 <textarea className="form-control" value={prop.textField} onChange={() => { }} style={{ minHeight: "12rem" }}></textarea>
             </li>
         </>
