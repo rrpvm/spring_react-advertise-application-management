@@ -31,16 +31,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.csrf()
-                .disable().
-                authorizeRequests()
-                .antMatchers("/")
+                .disable()
+                .authorizeRequests()
+                .antMatchers("/api/public/*","/registration")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
                 .logout()
                 .logoutUrl("/logout")
-                .logoutSuccessUrl("/")
                 .invalidateHttpSession(true)
                 .clearAuthentication(true)
                 .deleteCookies("JSESSIONID")

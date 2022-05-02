@@ -10,7 +10,7 @@ import java.util.Set;
 @Table(name = "users")
 public class User {
     @Id
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     @Column(name = "login")
     private String login;
@@ -19,10 +19,10 @@ public class User {
 
     @ElementCollection(targetClass = UserRole.class, fetch = FetchType.EAGER)
     @CollectionTable(
-            name="user_role",
-            joinColumns = @JoinColumn(name="id",referencedColumnName = "id"))
+            name = "user_role",
+            joinColumns = @JoinColumn(name = "id", referencedColumnName = "id"))
     @Enumerated(EnumType.STRING)
-    private Set<UserRole>roles;
+    private Set<UserRole> roles;
 
     public Integer getId() {
         return id;

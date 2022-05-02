@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import AppAPI from "../API/APIRequests";
 import { BannerItemLayout } from "../components/BannerItemLayout";
 import { ShowItemComponent } from "../components/ShowItemComponent";
 import { ShowListComponent } from "../components/ShowListComponent";
@@ -36,7 +37,7 @@ export const BannerPage: React.FC = () => {
         }))
     }
     const banners: Array<IBanner> = [
-        {
+      /*  {
             id: 0,
             name: 'first banner',
             price: 9.99,
@@ -49,10 +50,17 @@ export const BannerPage: React.FC = () => {
             price: 19.99,
             textField: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
             categories: [],
-        },
+        },*/
     ];
-    const [selectedBanner, setSelectedBanner] = useState(banners[0]);
-    const [avaliableBanners, filterBanners] = useState(banners);
+    useEffect(()=>{
+        console.log('BannerPage did mount()');
+        //bannerContainer.current = AppAPI.getBanners();
+       // console.log(bannerContainer.current);
+    }, []);
+   
+    const [selectedBanner, setSelectedBanner] = useState<IBanner>({id:0,textField:"",categories:[],name:'Create new category',price:0});
+    const [avaliableBanners, filterBanners] = useState<IBanner[]>(banners);
+   // const bannerContainer = useRef<IBanner[]>(banners);
     return (
         <div className="container">
             <div className="row" style={{ flexWrap: "nowrap" }}>
