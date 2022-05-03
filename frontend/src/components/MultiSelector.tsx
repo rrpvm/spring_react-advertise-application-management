@@ -42,7 +42,7 @@ export const MultiSelector: React.FC<IMultiselectable> = ({ uniqueStrings, alrea
         return (
             <>
                 {
-                    selectedItems.map(item => {
+                    selectedItems?.map(item => {
                         return (
                             <div style={{ display: "flex", background: "rgb(230, 230, 230)", alignItems: "center" }} key={item}>
                                 <span style={{ fontSize: "1em", padding: "0px 0.2em" }}>{item}</span>

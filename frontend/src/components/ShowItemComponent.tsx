@@ -1,7 +1,7 @@
 import React from "react";
 
 type ListComponentProps = {
-    title: string;
+    title?: string;
 }
 export const ShowItemComponent: React.FC<React.PropsWithChildren<ListComponentProps>> = ({ title, children }) => {
     return (

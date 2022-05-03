@@ -5,11 +5,12 @@ type ListComponentProps = {
     title: string;
     itemsName: Array<string>;
     floatingButtonName: string,
-    activeItem: string,
+    activeItem?: string,
     callback: CallableFunction,
     onProcessInput?: CallableFunction,
+    createItemCallback: CallableFunction,
 }
-export const ShowListComponent: React.FC<ListComponentProps> = ({ title, itemsName, floatingButtonName, activeItem, callback, onProcessInput }) => {
+export const ShowListComponent: React.FC<ListComponentProps> = ({ title, itemsName, floatingButtonName, activeItem, callback, onProcessInput ,createItemCallback}) => {
     const [searchValue, setSearchValue] = useState('');
     function processInput(e: React.ChangeEvent<HTMLInputElement>): void {
         setSearchValue(e.target.value);
@@ -19,7 +20,7 @@ export const ShowListComponent: React.FC<ListComponentProps> = ({ title, itemsNa
         }
     }
     return (
-        <div className="card" style={{ width: "100%", margin: "1.5rem", height: '100%' }}>
+        <div className="card" style={{ width: "100%", height: '100%' }}>
             <h3 className="text-center">{title}</h3>
             <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" onChange={processInput} value={searchValue}></input>
             <ul className="list-group list-group-flush">
@@ -29,7 +30,7 @@ export const ShowListComponent: React.FC<ListComponentProps> = ({ title, itemsNa
                     })
                 }
             </ul>
-            <button className="btn btn-primary" type="submit" style={{ backgroundColor: "#f06292", borderColor: "#f06292", marginTop: "auto" }}>Create new {floatingButtonName}</button>
+            <button className="btn btn-primary" type="button" style={{ backgroundColor: "#f06292", borderColor: "#f06292", marginTop: "auto" }} onClick={()=>{createItemCallback()}}>Create new {floatingButtonName}</button>
         </div>
     );
 };

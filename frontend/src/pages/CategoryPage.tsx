@@ -41,9 +41,9 @@ export const CategoryPage: React.FC = () => {
     ];
     const [selectedCategory, setSelectedCategory] = useState(categories[0]);
     const [avaliableCategories, filterCategories] = useState(categories);
-    return (
+  /*  return (
         <div className="container">
-            <div className="row">
+           <div className="row" style={{ flexWrap: "nowrap",marginTop:"5vh"  }}>
                 <div className="col col-lg-3" style={{ minHeight: '768px' }}>
                     <ShowListComponent title="Category" floatingButtonName="categories" itemsName={getNamesFromCategoriesArray(avaliableCategories)} callback={handleCategoryClick} onProcessInput={handleSearchEvent} activeItem={selectedCategory.name}></ShowListComponent>
                 </div>
@@ -54,5 +54,7 @@ export const CategoryPage: React.FC = () => {
                 </div>
             </div>
         </div>
-    );
+    );*/
+    return(<>
+    </>)
 };

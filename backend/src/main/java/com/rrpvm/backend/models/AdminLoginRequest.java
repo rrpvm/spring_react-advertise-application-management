@@ -1,6 +1,8 @@
 package com.rrpvm.backend.models;
 
-public class UserInputData {
+import java.io.Serializable;
+
+public class AdminLoginRequest implements Serializable {
     private String login;
     private String password;
 
@@ -20,10 +22,10 @@ public class UserInputData {
         this.password = password;
     }
 
-    public UserInputData() {
+    public AdminLoginRequest() {
     }
 
-    public UserInputData(String login, String password) {
+    public AdminLoginRequest(String login, String password) {
         this.login = login;
         this.password = password;
     }

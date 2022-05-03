@@ -3,7 +3,8 @@ import { useLocation } from "react-router-dom";
 import { NavigationItem } from "./NavigationItem";
 const navigablePaths: Array<string> = [
     "/banners",
-    "/categories"
+    "/categories",
+    "/advertisement"
 ];
 export const NavigationBar: React.FC = () => {
     let location = useLocation().pathname;
