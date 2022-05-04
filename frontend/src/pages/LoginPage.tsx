@@ -1,8 +1,5 @@
 import axios from "axios";
 import { useState } from "react";
-import AppAPI from "../API/APIRequests";
-
-
 export const LoginPage: React.FC = () => {
     const handleFormSend = (e: React.FormEvent<HTMLFormElement>): void => {
         e.preventDefault();
@@ -17,7 +14,8 @@ export const LoginPage: React.FC = () => {
             'login': login,
             'password': password
         }, config).then(data => {
-            //dispatch(changeEmail({ email: data.data }));
+          //  dispatch({ type: "SET_TOKEN", data });
+            console.log()
         }
         );
 
@@ -45,6 +43,3 @@ export const LoginPage: React.FC = () => {
     )
 }
 
-function dispatch(arg0: any) {
-    throw new Error("Function not implemented.");
-}
