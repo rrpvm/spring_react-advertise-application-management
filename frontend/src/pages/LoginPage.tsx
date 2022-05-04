@@ -1,24 +1,16 @@
-import axios from "axios";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import AppAPI from "../API/APIRequests";
+import { jwtState } from "../store/reducers/jwtTokenReducer";
+
 export const LoginPage: React.FC = () => {
-    const handleFormSend = (e: React.FormEvent<HTMLFormElement>): void => {
+    const disp = useDispatch();
+    const jwt = useSelector<jwtState, string>((state) => state.jwtToken);
+    const handleFormSend = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const headers = {
-            //'Authorization' : 'Bearer  ',
-        }
-        let config = {
-            headers,
-        }
-
-        axios.post('http://localhost:8080/authenticate', {
-            'login': login,
-            'password': password
-        }, config).then(data => {
-          //  dispatch({ type: "SET_TOKEN", data });
-            console.log()
-        }
-        );
-
+        const jwtResponce = await AppAPI.authenticate(login, password, jwt);
+        disp({ type: "SET_TOKEN", payload: jwtResponce });
+        console.log(jwtResponce);
     }
     const [login, setLogin] = useState<string>('');
     const [password, setPassword] = useState<string>('');
@@ -39,6 +31,7 @@ export const LoginPage: React.FC = () => {
                 </div>
                 <button type="submit" className="btn btn-primary">Submit</button>
             </form>
+            {jwt}
         </div >
     )
 }

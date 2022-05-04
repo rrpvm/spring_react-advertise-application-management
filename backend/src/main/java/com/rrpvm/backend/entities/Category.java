@@ -1,25 +1,29 @@
 package com.rrpvm.backend.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
-@Table(name="categories")
+@Table(name = "categories")
 public class Category {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(name = "name", unique = true)
     private String name;
+    @Column(name = "request_id", unique = true)
     private String requestId;
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonBackReference
+
+    @ManyToOne(targetEntity = Banner.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Banner banner;
 
     public Category() {
     }
 
-    public Category(Integer id, String name, String requestId, Banner banner) {
+    public Category(Integer id, String name, String requestId,Banner banner) {
         this.id = id;
         this.name = name;
         this.requestId = requestId;

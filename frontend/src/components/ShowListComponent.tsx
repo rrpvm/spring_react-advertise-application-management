@@ -1,23 +1,20 @@
 import { useState } from "react";
+import { IBanner } from "../interfaces/IBanner";
 
 
 type ListComponentProps = {
-    title: string;
-    itemsName: Array<string>;
-    floatingButtonName: string,
-    activeItem?: string,
-    callback: CallableFunction,
-    onProcessInput?: CallableFunction,
-    createItemCallback: CallableFunction,
+    title: string;//title of component
+    //actionButtonName: string,//name of 'create button'
+    onSearchNameCallback: CallableFunction;//calls parent' filter function on search
+    itemsList: IBanner[],//list of items to show
+    activeItemId: number,//active item id
+    onItemClickCallback: CallableFunction,//calls parent' function by click on any showed banner
 }
-export const ShowListComponent: React.FC<ListComponentProps> = ({ title, itemsName, floatingButtonName, activeItem, callback, onProcessInput ,createItemCallback}) => {
+export const ShowListComponent: React.FC<React.PropsWithChildren<ListComponentProps>> = ({ title, onSearchNameCallback, itemsList, activeItemId, onItemClickCallback, children }) => {
     const [searchValue, setSearchValue] = useState('');
-    function processInput(e: React.ChangeEvent<HTMLInputElement>): void {
+    let processInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
         setSearchValue(e.target.value);
-        if (onProcessInput !== undefined) {/*ts warnings skip */
-            const call = onProcessInput;
-            call(e.target.value.toLocaleLowerCase());
-        }
+        onSearchNameCallback(e.target.value.toLocaleLowerCase());
     }
     return (
         <div className="card" style={{ width: "100%", height: '100%' }}>
@@ -25,12 +22,18 @@ export const ShowListComponent: React.FC<ListComponentProps> = ({ title, itemsNa
             <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" onChange={processInput} value={searchValue}></input>
             <ul className="list-group list-group-flush">
                 {
-                    itemsName.map((item) => {
-                        return (<li className={activeItem === item ? "list-group-item active" : "list-group-item hoverable"} style={{ cursor: "pointer", }} key={item} onClick={() => { callback(item) }}>{item}</li>);
+                    itemsList.map((item) => {
+                        return (
+                            <li className={activeItemId === item.id ? "list-group-item active" : "list-group-item hoverable"}
+                                style={{ cursor: "pointer", }}
+                                key={item.id}
+                                onClick={() => { onItemClickCallback(item) }}>{item.name}
+                            </li>
+                        );
                     })
                 }
             </ul>
-            <button className="btn btn-primary" type="button" style={{ backgroundColor: "#f06292", borderColor: "#f06292", marginTop: "auto" }} onClick={()=>{createItemCallback()}}>Create new {floatingButtonName}</button>
+            {children}
         </div>
     );
 };

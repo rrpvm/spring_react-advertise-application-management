@@ -14,14 +14,14 @@ import java.util.List;
 @Table(name = "users")
 public class User implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Column(name = "login")
     private String login;
     @Column(name = "password")
     private String password;
 
-    @ElementCollection(targetClass = SimpleGrantedAuthority.class, fetch = FetchType.LAZY)
+    @ElementCollection(targetClass = SimpleGrantedAuthority.class, fetch = FetchType.EAGER)
     @Column(name = "authoritites")
     private Collection<SimpleGrantedAuthority> authorities;
     public User(Integer id, String username, String password, String role) {

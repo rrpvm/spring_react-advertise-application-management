@@ -36,7 +36,6 @@ export const MultiSelector: React.FC<IMultiselectable> = ({ uniqueStrings, alrea
     useEffect(() => {
         setSelectedItems(alreadySelected);
         setAvaliableItems(uniqueStrings);
-        console.log('useEffect() multiselector')
     }, [alreadySelected, uniqueStrings])//при изменении 1го из параметров -> мы поменяли выбранный баннер
     function renderSelectedList(): JSX.Element {
         return (

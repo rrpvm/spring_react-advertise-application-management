@@ -51,7 +51,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
@@ -59,36 +58,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
                 .exceptionHandling().authenticationEntryPoint(jwtUnAuthorizedResponseAuthenticationEntryPoint).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .antMatchers("/login", "/registration", "/authenticate", "/refresh", "/public**")
+                .antMatchers(  "/authenticate", "/refresh", "/public**")
                 .permitAll()
                 .anyRequest().authenticated();
         httpSecurity
                 .addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
-      /*  httpSecurity
-                .headers()
-                .frameOptions().sameOrigin()  //H2 Console Needs this setting
-                .cacheControl(); //disable caching*/
+        httpSecurity.cors();
     }
-
-    /*  @Override
-      public void configure(WebSecurity webSecurity) throws Exception {
-          webSecurity
-                  .ignoring()
-                  .antMatchers(
-                          HttpMethod.POST,
-                          authenticationPath
-                  )
-                  .antMatchers(HttpMethod.OPTIONS, "/**")
-                  .and()
-                  .ignoring()
-                  .antMatchers(
-                          HttpMethod.GET,
-                          "/" //Other Stuff You want to Ignore
-                  )
-                  .and()
-                  .ignoring()
-                //  .antMatchers("/h2-console/*");
-      }*/
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**").allowedMethods("*").allowedOrigins("*");

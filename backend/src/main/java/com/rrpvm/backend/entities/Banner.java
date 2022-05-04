@@ -1,17 +1,14 @@
 package com.rrpvm.backend.entities;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import javax.persistence.*;
 import java.util.List;
-
 @Entity
 @Table(name = "banners")
 public class Banner {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
-    @Column(name = "banner_name")
+    @Column(name = "banner_name",unique = true)
     private String name;
     @Column(name = "banner_text")
     private String textField;
@@ -19,17 +16,15 @@ public class Banner {
     private Double price;
     @Column(name = "is_deleted")
     private boolean isDeleted;
-    @OneToMany(targetEntity = Category.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private List<Category> linkedCategories;//names
-
+    @ManyToMany(targetEntity = Category.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Category> categories;//names
     public Banner(Integer id, String name, String textField, Double price, boolean isDeleted, List<Category> linkedCategories) {
         this.id = id;
         this.name = name;
         this.textField = textField;
         this.price = price;
         this.isDeleted = isDeleted;
-        this.linkedCategories = linkedCategories;
+        this.categories = linkedCategories;
     }
 
     public Banner() {
@@ -76,10 +71,14 @@ public class Banner {
     }
 
     public List<Category> getLinkedCategories() {
-        return linkedCategories;
+        return categories;
     }
 
     public void setLinkedCategories(List<Category> linkedCategories) {
-        this.linkedCategories = linkedCategories;
+        this.categories = linkedCategories;
+    }
+    @Override
+    public String toString(){
+        return  String.format("id:%d\nname:%s\ntextField:%s\nprice:%.5f\nisDeleted:%b\n,%s", id, name, textField,price,isDeleted,categories.toString());
     }
 }

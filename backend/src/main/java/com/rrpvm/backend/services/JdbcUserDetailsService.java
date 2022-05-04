@@ -31,6 +31,5 @@ public class JdbcUserDetailsService implements UserDetailsService, InitializingB
     public void afterPropertiesSet() throws Exception { /*post-initialization, add admin to data base*/
         if (userRepository.findByLogin(ADMIN_LOGIN) == null)
             userRepository.save(new User(null, ADMIN_LOGIN, passwordEncoder.encode(ADMIN_PASSWORD), "ADMIN"));
-
     }
 }

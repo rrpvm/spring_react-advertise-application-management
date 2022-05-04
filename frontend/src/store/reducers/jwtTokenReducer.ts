@@ -1,18 +1,14 @@
-
-interface jwtState {
+export interface jwtState {
     jwtToken: string,
-}
-const initialJwtState = {
-    jwtToken: ''
 }
 type Action = {
     type: "SET_TOKEN",
-    payload: "string",
+    payload: string,
 }
-export const jwtReducer = (prevState: jwtState = initialJwtState, action: Action) => {
+export const jwtReducer = (prevState: jwtState = {jwtToken:""}, action: Action) => {
     switch (action.type) {
         case "SET_TOKEN": {
-                return { prevState, jwtToken : action.payload}
+                return {prevState , jwtToken : action.payload};//
         }
         default: {
             return prevState;
