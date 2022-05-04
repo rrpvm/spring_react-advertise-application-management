@@ -5,13 +5,12 @@ import com.rrpvm.backend.daos.CategoryRepository;
 import com.rrpvm.backend.entities.Banner;
 import com.rrpvm.backend.entities.Category;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin("*")
@@ -23,15 +22,21 @@ public class ApiController {
     private CategoryRepository categoryRepository;
 
     @GetMapping("/banners")
-    private List<Banner> responceBanners() {
+    private List<Banner> responseBanners() {
         List<Banner> banners = bannerRepository.findAll();
-        for (Banner banner : banners) {
-            List<Category> categories = categoryRepository.findAllByBanner_Id(banner.getId());
-            if (categories != null)
-                for(Category category : categories){
-                    System.out.println("category_id : " + category.getId());
-                }
-        }
         return banners;
+    }
+    @GetMapping("/categories")
+    private List<Category> responseCategories() {
+        List<Category> categories = categoryRepository.findAll();
+        return categories;
+    }
+    @PutMapping("/banners/save/{id}")
+    private ResponseEntity<?> saveBanner(@PathVariable("id")int id,@RequestBody Banner customBanner) {
+        List<Banner> banners = bannerRepository.findAll();
+        Banner changedBanner = (banners.stream().filter(banner -> banner.getId() == id).collect(Collectors.toList())).get(0);
+        System.out.println(changedBanner.toString());
+        System.out.println(customBanner.toString());
+        return ResponseEntity.ok("success");
     }
 }

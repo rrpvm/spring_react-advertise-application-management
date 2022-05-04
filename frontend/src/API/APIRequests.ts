@@ -33,6 +33,27 @@ class API {
         const request =  await axios.get<IBanner[]>(`${this.urlPrivate}/banners`, config);
         return request;
     };
+    async saveBanner(jwtToken:string, banner : IBanner) {
+        const config: IRequestConfig = {
+            headers: {
+                "Authorization":"Bearer ".concat(jwtToken)
+            }
+        };
+        const request =  await axios.put<string>(`${this.urlPrivate}/banners/save/${banner.id}`,{
+            bannerToSave : banner,
+        }, config);
+        return request;
+    };
+    async getCategories(jwtToken:string) {
+        const config: IRequestConfig = {
+            headers: {
+                "Authorization":"Bearer ".concat(jwtToken)
+            }
+        };
+        const request =  await axios.get<ICategory[]>(`${this.urlPrivate}/categories`, config);
+        return request;
+    };
+
 }
 const AppAPI = new API();
 export default AppAPI;
