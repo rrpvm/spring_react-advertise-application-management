@@ -22,6 +22,9 @@ public class Banner {
     @Column(name = "is_deleted",columnDefinition = "bit default 0")
     private boolean isDeleted;
     @ManyToMany(targetEntity = Category.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "banners_categories",
+            joinColumns = @JoinColumn(name = "id"),
+            inverseJoinColumns = @JoinColumn(name = "categories_id"))
     @JsonIgnore//break infinity loop
     private List<Category> categories;//names
     public Banner(Long id, String name, String textField, Double price, boolean isDeleted, List<Category> linkedCategories) {

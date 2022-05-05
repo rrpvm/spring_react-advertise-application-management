@@ -24,9 +24,6 @@ public class Category {
     private String requestId;
 
     @ManyToMany(targetEntity = Banner.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "banners_categories",
-            joinColumns = @JoinColumn(name = "banner_id"),
-            inverseJoinColumns = @JoinColumn(name = "categories_id"))
     @JsonIgnore////break infinity loop
     private List<Banner> banner;
 
