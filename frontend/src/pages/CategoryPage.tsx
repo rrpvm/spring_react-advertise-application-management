@@ -1,13 +1,5 @@
-import { useState } from "react";
-import { CategoryItemLayout } from "../components/CategoryItemLayout";
-import { ShowItemComponent } from "../components/ShowItemComponent";
-import { ShowListComponent } from "../components/ShowListComponent";
-import { ICategory } from "../interfaces/ICategory";
-
-
-
 export const CategoryPage: React.FC = () => {
-    function getNamesFromCategoriesArray(categories: ICategory[]): string[] {//need to be cached/optimized
+   /* function getNamesFromCategoriesArray(categories: ICategory[]): string[] {//need to be cached/optimized
         let namesArray: string[] = [];
         categories.forEach(categories => {
             namesArray.push(categories.name);

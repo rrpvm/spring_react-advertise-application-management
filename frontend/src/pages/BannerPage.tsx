@@ -1,33 +1,49 @@
-import { AxiosError } from "axios";
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import AppAPI from "../API/APIRequests";
-import { BannerItemLayout } from "../components/BannerItemLayout";
-import { ShowItemComponent } from "../components/ShowItemComponent";
+import { AxiosError } from "axios";
+import { ChangeEvent, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { ShowListComponent } from "../components/ShowListComponent";
 import { IBanner } from "../interfaces/IBanner";
 import { ICategory } from "../interfaces/ICategory";
 import { jwtState } from "../store/reducers/jwtTokenReducer";
-
-
+import { MultiSelector } from "../components/MultiSelector";
 
 export const BannerPage: React.FC = () => {
+<<<<<<< Updated upstream
     let handleSearchEvent = (e: string): void => {
+=======
+
+    /**
+     * Utilis
+     **/
+    /*let addBanner = (newBanner: IBanner) => {
+        setAllBanners(oldBanners => [...oldBanners, newBanner]);
+        console.log(allBanners);
+    }*/
+    /*HANDLERS */
+    const handleSearchEvent = (e: string): void => {
+>>>>>>> Stashed changes
         setDisplayedBanners(allBanners.filter(banner => {
             return banner.name.toLowerCase().indexOf(e) !== -1 //if 0 or bigger -> exist
         }))
     }
-    let handleSelectBanner = (bannerSelectedName: IBanner): void => {
-        setSelectedBannerId(bannerSelectedName.id);
+    const handleSelectBanner = (bannerSelected: IBanner): void => {
+        setSelectedBanner(bannerSelected);
     }
-    let saveBanner = () =>{
-        AppAPI.saveBanner(jwt,displayedBanners.filter(banner => banner.id === selectedBannerId)[0]);
+    const saveBanner = () => {
+        AppAPI.saveBanner(jwt, selectedBanner);
+    }
+    const getCategoryNames = (arr: ICategory[] | undefined): string[] => {
+        if (arr === undefined) return [];
+        let array: string[] = [];
+        arr.forEach(element => array.push(element.name));
+        return array;
     }
     /*HOOKS */
     const [allBanners, setAllBanners] = useState<IBanner[]>([]);//for first time -> useEffect -> axios
     const [displayedBanners, setDisplayedBanners] = useState<IBanner[]>([]);//for first time -> useEffect -> copy from allBanners
     const [allCategories, setCategories] = useState<ICategory[]>([]);//from storage(will) todo:
-    const [selectedBannerId, setSelectedBannerId] = useState<number>(-1);
+    const [selectedBanner, setSelectedBanner] = useState<IBanner>();
     const jwt = useSelector<jwtState, string>((state) => state.jwtToken);//authorization header
     useEffect(() => {
         const bannerPromise = AppAPI.getBanners(jwt);
@@ -35,7 +51,7 @@ export const BannerPage: React.FC = () => {
             setAllBanners(data.data);
             setDisplayedBanners(data.data);
             try {
-                setSelectedBannerId(data.data[0]?.id);
+                setSelectedBanner(data.data[0]);
             }
             catch (e) {
                 console.log(e);
@@ -68,33 +84,69 @@ export const BannerPage: React.FC = () => {
         <div className="container" >
             <div className="row" style={{ flexWrap: "nowrap", marginTop: "5vh" }}>
                 <div className="col col-lg-3" style={{ minHeight: '768px' }}>
-                    {
-                        <ShowListComponent
-                            title="Banners"
-                            onSearchNameCallback={handleSearchEvent}
-                            itemsList={displayedBanners}
-                            activeItemId={selectedBannerId}
-                            onItemClickCallback={handleSelectBanner}
-                        >
-                            <button className="btn btn-primary" type="button"
-                                style={{ backgroundColor: "#f06292", borderColor: "#f06292", marginTop: "auto" }}
-                                onClick={() => { }}>
-                                Create new banner
-                            </button>
-                        </ShowListComponent>
-                    }
+                    <ShowListComponent
+                        title="Banners"
+                        onSearchNameCallback={handleSearchEvent}
+                        itemsList={displayedBanners}
+                        onItemClickCallback={handleSelectBanner}
+                    >
+                        <button className="btn btn-primary" type="button"
+                            style={{ backgroundColor: "#f06292", borderColor: "#f06292", marginTop: "auto" }}
+                            onClick={() => { }}>
+                            Create new banner
+                        </button>
+                    </ShowListComponent>
                 </div>
                 <div className="col col-lg-9" style={{ minHeight: '768px' }}>
-                    {
-                        <ShowItemComponent title={"Create new banner"} onSaveButton={saveBanner}>
-                            {
-                                <BannerItemLayout
-                                    editable_banner={displayedBanners.filter(banner => banner.id === selectedBannerId)[0]}
-                                    allCategories={allCategories}
-                                ></BannerItemLayout>
-                            }
-                        </ShowItemComponent>
-                    }
+                    <div className="card" style={{ width: "100%", height: '100%' }}>
+                        <h3 className="text-center">{"Create a new banner"}</h3>
+                        {
+                            selectedBanner !== undefined ? (
+                                <ul className="list-group list-group-flush " style={{ display: 'flex', flexDirection: "column", maxWidth: '100%', overflow: "hidden" }} key={selectedBanner.id}>
+                                    <li className="list-group-item" style={{ display: "flex" }}>
+                                        <div style={{ width: "6rem", display: "flex", alignItems: "center", textAlign: "center", }}>Name</div>
+                                        <input className="form-control" value={selectedBanner.name} onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                                            let mutableBanner = Object.assign({}, selectedBanner);  //{...selectedBanner};
+                                            mutableBanner.name = e.target.value;
+                                            setSelectedBanner(mutableBanner);
+                                        }}></input>
+                                    </li>
+                                    <li className="list-group-item" style={{ display: "flex" }}>
+                                        <div style={{ width: "6rem", display: "flex", alignItems: "center", textAlign: "center", }}>Price</div>
+                                        <input className="form-control" value={selectedBanner.price} onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                                            let mutableBanner = Object.assign({}, selectedBanner);  //{...selectedBanner};
+                                            try {
+                                                mutableBanner.price = parseFloat(e.target.value);
+                                            }
+                                            catch (e) {
+                                                console.log(e);
+                                            }
+                                            setSelectedBanner(mutableBanner);
+                                        }}></input>
+                                    </li>
+                                    <li className="list-group-item" style={{ display: "flex" }}>
+                                        <MultiSelector
+                                            uniqueStrings={getCategoryNames(allCategories)}
+                                            alreadySelected={getCategoryNames(selectedBanner.linkedCategories)}
+                                        ></MultiSelector>
+                                    </li>
+                                    <li className="list-group-item" style={{ display: "flex" }}>
+                                        <div style={{ width: "6rem", display: "flex", alignItems: "center", textAlign: "center", }}>Text</div>
+                                        <textarea className="form-control" value={selectedBanner.textField} onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
+                                            let mutableBanner = Object.assign({}, selectedBanner);  //{...selectedBanner};
+                                            mutableBanner.textField = e.target.value;
+                                            setSelectedBanner(mutableBanner);
+                                        }}></textarea>
+                                    </li>
+                                </ul>
+                            ) : <></>
+                        }
+                        <div style={{ display: "flex", marginTop: "auto", width: "100%", justifyContent: "space-between", alignSelf: "flex-end" }}>
+                            <button type="button" className="btn btn-primary" onClick={saveBanner}>save</button>
+                            <button type="button" className="btn btn-primary">delete</button>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div >

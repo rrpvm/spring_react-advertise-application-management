@@ -33,15 +33,20 @@ class API {
         const request =  await axios.get<IBanner[]>(`${this.urlPrivate}/banners`, config);
         return request;
     };
-    async saveBanner(jwtToken:string, banner : IBanner) {
+    async saveBanner(jwtToken:string, banner : IBanner|undefined) {
+        if(banner === undefined)return;
         const config: IRequestConfig = {
             headers: {
                 "Authorization":"Bearer ".concat(jwtToken)
             }
         };
+<<<<<<< Updated upstream
         const request =  await axios.put<string>(`${this.urlPrivate}/banners/save/${banner.id}`,{
            banner,
         }, config);
+=======
+        const request =  await axios.put<string>(`${this.urlPrivate}/banners/save/${banner.id}`,banner, config);
+>>>>>>> Stashed changes
         return request;
     };
     async getCategories(jwtToken:string) {

@@ -11,5 +11,5 @@ import java.util.List;
 
 
 public interface BannerRepository extends JpaRepository<Banner,Integer>{
-
+    Banner findBannerByName(String name);
 }

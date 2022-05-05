@@ -1,11 +1,14 @@
 package com.rrpvm.backend.entities;
+<<<<<<< Updated upstream
 
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+=======
+>>>>>>> Stashed changes
 import javax.persistence.*;
-import java.util.List;
+import javax.validation.constraints.Size;
 
 /*
 1. выбор имени и айди запроса по айди банера
@@ -17,7 +20,8 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(name = "name", unique = true)
+    @Column(name = "name", unique = true,length = 255)
+    @Size(min = 4,max = 255)
     private String name;
     @Column(name = "request_id", unique = true)
     private String requestId;
@@ -38,7 +42,6 @@ public class Category {
         this.requestId = requestId;
         this.banner = banner;
     }
-
     public Integer getId() {
         return id;
     }

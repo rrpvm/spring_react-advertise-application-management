@@ -1,27 +1,32 @@
 package com.rrpvm.backend.entities;
 
+<<<<<<< Updated upstream
 import com.fasterxml.jackson.annotation.JsonIgnore;
+=======
+>>>>>>> Stashed changes
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.util.List;
 @Entity
 @Table(name = "banners")
 public class Banner {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Integer id;
-    @Column(name = "banner_name",unique = true)
+    private Long id;
+    @Column(name = "banner_name",unique = true,length = 255)
+    @Size(min = 4, max = 255)
     private String name;
     @Column(name = "banner_text")
     private String textField;
     @Column(name = "banner_price")
     private Double price;
-    @Column(name = "is_deleted")
+    @Column(name = "is_deleted",columnDefinition = "bit default 0")
     private boolean isDeleted;
     @ManyToMany(targetEntity = Category.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore//break infinity loop
     private List<Category> categories;//names
-    public Banner(Integer id, String name, String textField, Double price, boolean isDeleted, List<Category> linkedCategories) {
+    public Banner(Long id, String name, String textField, Double price, boolean isDeleted, List<Category> linkedCategories) {
         this.id = id;
         this.name = name;
         this.textField = textField;
@@ -33,11 +38,11 @@ public class Banner {
     public Banner() {
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
