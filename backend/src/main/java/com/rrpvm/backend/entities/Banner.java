@@ -13,7 +13,7 @@ public class Banner {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
     @Column(name = "banner_name",unique = true,length = 255)
-    @Size(min = 4, max = 255)
+    @Size(min = 2, max = 255)
     private String name;
     @Column(name = "banner_text")
     private String textField;
@@ -35,7 +35,13 @@ public class Banner {
         this.isDeleted = isDeleted;
         this.categories = linkedCategories;
     }
-
+    public Banner( String name, String textField, Double price, boolean isDeleted, List<Category> linkedCategories) {
+        this.name = name;
+        this.textField = textField;
+        this.price = price;
+        this.isDeleted = isDeleted;
+        this.categories = linkedCategories;
+    }
     public Banner() {
     }
 

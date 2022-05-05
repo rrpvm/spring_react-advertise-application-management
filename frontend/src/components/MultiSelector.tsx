@@ -64,8 +64,8 @@ export const MultiSelector: React.FC<IMultiselectable> = ({ uniqueStrings, alrea
     }
     return (
         <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
-            <div style={{ display: "flex", width: "100%", border: "1px solid #ced4da", borderRadius: "1px" }} >
-                <div style={{ display: "flex", width: "95%", overflow: "hidden" }}>
+            <div style={{ display: "flex", width: "100%", border: "1px solid #ced4da", borderRadius: "1px", }} >
+                <div style={{ display: "flex", width: "95%",flexWrap:"wrap", overflow: "hidden" }}>
                     {renderSelectedList()}
                 </div>
                 <div style={{ justifyContent: "flex-end", display: "flex", padding: "5px 10px", alignItems: "center" }} className="hoverable" onClick={() => { showSelect(!bShowSelect) }}>

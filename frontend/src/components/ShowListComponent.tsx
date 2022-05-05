@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
 import { IBanner } from "../interfaces/IBanner";
+import { ICategory } from "../interfaces/ICategory";
 
 
 type ListComponentProps = {
     title: string;//title of component
     onSearchNameCallback: CallableFunction;//calls parent' filter function on search
-    itemsList: IBanner[],//list of items to show
+    itemsList: IBanner[] | ICategory[],//list of items to show
     onItemClickCallback: CallableFunction,//calls parent' function by click on any showed banner
 }
 export const ShowListComponent: React.FC<React.PropsWithChildren<ListComponentProps>> = ({ title, onSearchNameCallback, itemsList, onItemClickCallback, children }) => {
     const [searchValue, setSearchValue] = useState('');
-    const [activeItem, setActiveItem] = useState<IBanner>(itemsList[0]);
+    const [activeItem, setActiveItem] = useState<IBanner | ICategory>(itemsList[0]);
     useEffect(()=>{
         setActiveItem(itemsList[0]);
     },[itemsList])//DidMount();

@@ -17,11 +17,15 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "name", unique = true, length = 255)
-    @Size(min = 4, max = 255)
+    @Size(min = 2, max = 255)
     private String name;
     @Column(name = "request_id", unique = true, length = 255)
-    @Size(min = 4, max = 255)
+    @Size(min = 2, max = 255)
     private String requestId;
+
+    @Column(name = "is_deleted", columnDefinition = "bit default 0")
+    private boolean deleted;
+
 
     @ManyToMany(targetEntity = Banner.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore////break infinity loop
@@ -30,11 +34,12 @@ public class Category {
     public Category() {
     }
 
-    public Category(Long id, String name, String requestId, List<Banner> banner) {
+    public Category(Long id, String name, String requestId, boolean isDeleted, List<Banner> banner) {
         this.id = id;
         this.name = name;
         this.requestId = requestId;
         this.banner = banner;
+        this.deleted = isDeleted;
     }
 
     public Long getId() {
@@ -67,5 +72,13 @@ public class Category {
 
     public void setBanner(List<Banner> banner) {
         this.banner = banner;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

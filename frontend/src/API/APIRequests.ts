@@ -1,68 +1,57 @@
 import axios from "axios";
+import { URLSearchParams } from "url";
 import { IBanner } from "../interfaces/IBanner";
 import { ICategory } from "../interfaces/ICategory";
-interface IRequestConfig {
-    headers: {
-        "Authorization": string,
-    }
-}
+import { IRequestConfig } from "../interfaces/IRequestConfig";
+
+const requestConfigFabric = (jwt : string):IRequestConfig =>{
+    const config: IRequestConfig = {
+        headers: {
+            "Authorization": "Bearer ".concat(jwt)
+        }
+    };
+    return config;
+} 
 class API {
     constructor() {
         axios.defaults.headers.post['Content-Type'] = 'application/json';
     }
     readonly urlPrivate: string = 'http://localhost:8080/api/private';
-    readonly urlPublic: string = 'http://localhost:8080';
+    readonly urlPublic: string = 'http://localhost:8080';// bid = endpoint - public
     async authenticate(login: string, password: string, jwtToken: string) {
-        const config: IRequestConfig = {
-            headers: {
-                "Authorization": "Bearer ".concat(jwtToken)
-            }
-        };
         const responce = await axios.post(`${this.urlPublic}/authenticate`, {
             'login': login,
             'password': password
-        }, config);
+        }, requestConfigFabric(jwtToken));
         return responce.data.token;
     };
     async getBanners(jwtToken: string) {
-        const config: IRequestConfig = {
-            headers: {
-                "Authorization": "Bearer ".concat(jwtToken)
-            }
-        };
-        const request = await axios.get<IBanner[]>(`${this.urlPrivate}/banners`, config);
+        const request = await axios.get<IBanner[]>(`${this.urlPrivate}/getBanners`, requestConfigFabric(jwtToken));
         return request;
     };
-    saveBanner(jwtToken: string, banner: IBanner | undefined) {
+    async getCategories(jwtToken: string) {
+        const request = await axios.get<ICategory[]>(`${this.urlPrivate}/getCategories`, requestConfigFabric(jwtToken));
+        return request;
+    };
+    saveBanner(jwtToken: string, queryParams : URLSearchParams,banner: IBanner | undefined) {
         if (banner === undefined) return;
-        const config: IRequestConfig = {
-            headers: {
-                "Authorization": "Bearer ".concat(jwtToken)
-            }
-        };
-        const request = axios.put<string>(`${this.urlPrivate}/banners/save/${banner.id}`, banner, config);
+        const request = axios.put<string>(`${this.urlPrivate}/banners/save/${banner.id}?${queryParams.toString()}`, banner, requestConfigFabric(jwtToken));
         return request;
     };
+    saveCategory(jwtToken: string, queryParams : URLSearchParams,category: ICategory | undefined) {
+        if (category === undefined) return;
+        const request = axios.put<string>(`${this.urlPrivate}/categories/save/${category.id}?${queryParams.toString()}`, category, requestConfigFabric(jwtToken));
+        return request;
+    };  
     deleteBanner(jwtToken:string, id : number | undefined){
         if (id === undefined || id <= 0) return;
-        const config: IRequestConfig = {
-            headers: {
-                "Authorization": "Bearer ".concat(jwtToken)
-            }
-        };
-        const request = axios.delete<string>(`${this.urlPrivate}/banners/delete/${id}`, config);
-        return request;
-    }
-    async getCategories(jwtToken: string) {
-        const config: IRequestConfig = {
-            headers: {
-                "Authorization": "Bearer ".concat(jwtToken)
-            }
-        };
-        const request = await axios.get<ICategory[]>(`${this.urlPrivate}/categories`, config);
+        const request = axios.delete<string>(`${this.urlPrivate}/banners/delete/${id}`, requestConfigFabric(jwtToken));
         return request;
     };
-
+    deleteCategory(jwtToken:string, id : number | undefined){
+        if (id === undefined || id <= 0) return;
+        const request = axios.put<string>(`${this.urlPrivate}/categories/delete/${id}`,null, requestConfigFabric(jwtToken));
+        return request;
+    };
 }
-const AppAPI = new API();
-export default AppAPI;
+export default new API();

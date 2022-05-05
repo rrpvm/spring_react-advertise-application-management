@@ -2,75 +2,98 @@ html,
 body {
   height: 100%;
 }
-*{
+* {
   box-sizing: border-box;
 }
-.nav-list{
+.nav-list {
   display: flex;
   align-items: center;
-
 }
 /*BOOTSTRAP CHANGES*/
-.nav{
+.nav {
   padding: 10px;
   background: #f06292 !important;
   align-items: center;
 }
-.nav-wrapper{
+.nav-wrapper {
   width: 100%;
-  padding: 0.5rem .5rem;
+  padding: 0.5rem 0.5rem;
   display: flex;
   flex-direction: row;
   align-items: center;
 }
-.nav-list > li,a{
-color:#fff;
-border-color:#dee2e6 #dee2e6 #fff;
-text-decoration: none;
-}
-.nav-list > li,a:hover{
+.nav-list > li,
+a {
+  color: #fff;
+  border-color: #dee2e6 #dee2e6 #fff;
   text-decoration: none;
-  color:#fff;
+}
+.nav-list > li,
+a:hover {
+  text-decoration: none;
+  color: #fff;
 }
 .nav-item,
-.nav-link{
-  transition: all .3s;
+.nav-link {
+  transition: all 0.3s;
 }
 
 .list-group,
-.list-group > .active{
-  transition: all .3s;
+.list-group > .active {
+  transition: all 0.3s;
 }
-.list-group > .active{
-  background-color: #f06292  !important;
+.list-group > .active {
+  background-color: #f06292 !important;
   border-color: #f06292 !important;
 }
 /*CHANGES END*/
-.hoverable{
-  transition: all .2s;
+.hoverable {
+  transition: all 0.2s;
 }
-.hoverable:hover{
+.hoverable:hover {
   background: #f06292;
 }
-.multiselect-item{
+.multiselect-item {
   padding: 5px 10px;
-  border-top: 1px solid gray; 
-  transition: all .3s;
+  border-top: 1px solid gray;
+  transition: all 0.3s;
   border-radius: 3px;
 }
-.multiselect-item:hover{
+.multiselect-item:hover {
   background: #f06292;
 }
-.multiselect-selected-item{
+.multiselect-selected-item {
   background: #f06292;
   border: 1px solid #f06292;
-  transition: all .3s;
+  transition: all 0.3s;
   color: white;
 }
-.multiselect-selected-item:hover{
+.multiselect-selected-item:hover {
   background: #ec407a;
 }
-.btn{
+.btn {
   background: rgb(240, 98, 146) !important;
   border-color: rgb(240, 98, 146) !important;
+}
+.hidden-alert {
+  opacity: 0%;
+}
+.show-alert {
+  opacity: 100%;
+  animation: fadeIn;
+  animation-duration: .5s;
+  animation-timing-function: ease-in-out;
+  animation-delay: 0ms;
+  animation-iteration-count: 1;
+}
+@keyframes fadeIn {
+  0% {
+    opacity: 0%;
+  }
+  100% {
+    opacity: 100%;
+  }
+}
+.alert {
+  transition: all 0.3s;
 }
