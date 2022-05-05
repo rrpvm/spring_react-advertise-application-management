@@ -19,7 +19,8 @@ public class Category {
     @Column(name = "name", unique = true, length = 255)
     @Size(min = 4, max = 255)
     private String name;
-    @Column(name = "request_id", unique = true)
+    @Column(name = "request_id", unique = true, length = 255)
+    @Size(min = 4, max = 255)
     private String requestId;
 
     @ManyToMany(targetEntity = Banner.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)

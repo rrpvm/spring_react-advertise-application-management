@@ -10,7 +10,6 @@ import { MultiSelector } from "../components/MultiSelector";
 
 export const BannerPage: React.FC = (): JSX.Element => {
     const handleSearchEvent = (e: string): void => {
-
         setDisplayedBanners(allBanners.filter(banner => {
             return banner.name.toLowerCase().indexOf(e) !== -1 //if 0 or bigger -> exist
         }))
@@ -18,8 +17,21 @@ export const BannerPage: React.FC = (): JSX.Element => {
     const handleSelectBanner = (bannerSelected: IBanner): void => {
         setSelectedBanner(bannerSelected);
     }
-    const saveBanner = () => {
-        AppAPI.saveBanner(jwt, selectedBanner);
+    const saveBanner = async () => {
+        const responce = AppAPI.saveBanner(jwt, selectedBanner);
+        responce?.then(() => {
+            updateBannersData();
+        }).catch((exception: AxiosError) => {
+            switch (exception.response?.status) {
+                case 409: {
+                    console.log('username is already exist!');
+                    break;
+                }
+                default: {
+                    console.log(exception.response?.status);
+                }
+            }
+        });
     }
     const getCategoryNames = (arr: ICategory[] | undefined): string[] => {
         if (arr === undefined) return [];
@@ -33,6 +45,18 @@ export const BannerPage: React.FC = (): JSX.Element => {
     const [allCategories, setCategories] = useState<ICategory[]>([]);//from storage(will) todo:
     const [selectedBanner, setSelectedBanner] = useState<IBanner>();
     const jwt = useSelector<jwtState, string>((state) => state.jwtToken);//authorization header
+    const updateBannersData = () => {
+        const bannerPromise = AppAPI.getBanners(jwt);
+        bannerPromise.then(data => {
+            setAllBanners(data.data);
+            setDisplayedBanners(data.data);
+        }).catch((reason: AxiosError) => {
+            if (reason.response!.status === 401) {
+                console.log("Unauthorized!");
+            }
+            else console.log(reason.message);
+        });
+    }
     useEffect(() => {
         const bannerPromise = AppAPI.getBanners(jwt);
         bannerPromise.then(data => {
@@ -64,8 +88,6 @@ export const BannerPage: React.FC = (): JSX.Element => {
             }
             else console.log(reason.message);
         });
-
-
     }, [jwt]);//didMount()
     return (
         <div className="container" >
@@ -115,6 +137,16 @@ export const BannerPage: React.FC = (): JSX.Element => {
                                         <MultiSelector
                                             uniqueStrings={getCategoryNames(allCategories)}
                                             alreadySelected={getCategoryNames(selectedBanner.linkedCategories)}
+                                            onItemClick={(selected: string[]) => {
+                                                let arr : ICategory[] = [];
+                                                for(let item in allCategories){
+                                                   if(selected.indexOf(allCategories[item].name) !== -1){
+                                                    arr.push(allCategories[item]);
+                                                   }
+                                                }
+                                                
+                                            }}
+
                                         ></MultiSelector>
                                     </li>
                                     <li className="list-group-item" style={{ display: "flex" }}>
