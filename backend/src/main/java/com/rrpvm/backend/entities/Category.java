@@ -15,7 +15,7 @@ select categories.request_id, categories.name from  categories join banners_cate
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     @Column(name = "name", unique = true, length = 255)
     @Size(min = 4, max = 255)
     private String name;
@@ -30,18 +30,18 @@ public class Category {
     public Category() {
     }
 
-    public Category(Integer id, String name, String requestId, List<Banner> banner) {
+    public Category(Long id, String name, String requestId, List<Banner> banner) {
         this.id = id;
         this.name = name;
         this.requestId = requestId;
         this.banner = banner;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

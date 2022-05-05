@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.List;
 
 
-public interface BannerRepository extends JpaRepository<Banner,Integer>{
+public interface BannerRepository extends JpaRepository<Banner,Long> , CustomizeBannerRepository{
     Banner findBannerByName(String name);
+    List<Banner> findAllByIsDeleted(boolean deleted);
 }

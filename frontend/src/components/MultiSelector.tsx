@@ -37,16 +37,12 @@ export const MultiSelector: React.FC<IMultiselectable> = ({ uniqueStrings, alrea
     }
     useEffect(() => {
         setSelectedItems(alreadySelected);
-        setAvaliableItems(uniqueStrings);
-        let mutableAvaliable: string[] = [...uniqueStrings];
-        for (let i = 0; i < uniqueStrings.length; i++) { //clear the dublicates
-            for (let j = 0; j < alreadySelected.length; j++) {
-                if (mutableAvaliable[i] === alreadySelected[j]) {
-                    mutableAvaliable.splice(i, 1);
-                }
-            }
+        let arr : string [] = [...uniqueStrings];
+        for (let i = 0; i < alreadySelected.length; i++) {
+            const index = arr.indexOf(alreadySelected[i]);
+            arr.splice(index,1);
         }
-        setAvaliableItems(mutableAvaliable);
+        setAvaliableItems(arr);
     }, [alreadySelected, uniqueStrings])//при изменении 1го из параметров -> мы поменяли выбранный баннер
     function renderSelectedList(): JSX.Element {
         return (

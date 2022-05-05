@@ -17,14 +17,27 @@ export const BannerPage: React.FC = (): JSX.Element => {
     const handleSelectBanner = (bannerSelected: IBanner): void => {
         setSelectedBanner(bannerSelected);
     }
-    const saveBanner = async () => {
+    const bannerTemplateFactory = () : IBanner => {
+        return {
+            id : -1,
+            price : 0,
+            textField : ' ',
+            name : 'new banner',
+            linkedCategories : [],
+        }
+    }
+    const saveBanner = (): void => { //2 params : "delete or save"
         const responce = AppAPI.saveBanner(jwt, selectedBanner);
         responce?.then(() => {
             updateBannersData();
         }).catch((exception: AxiosError) => {
             switch (exception.response?.status) {
                 case 409: {
-                    console.log('username is already exist!');
+                    console.log('banner name is already exist!');
+                    break;
+                }
+                case 402: {
+                    console.log('categories cannot be null!');
                     break;
                 }
                 default: {
@@ -32,13 +45,33 @@ export const BannerPage: React.FC = (): JSX.Element => {
                 }
             }
         });
+    };
+    const deleteBanner = (): void => {
+        const responce = AppAPI.deleteBanner(jwt, selectedBanner?.id);
+        responce?.then(() => {
+            updateBannersData();
+        }).catch((exception: AxiosError) => {
+            switch (exception.response?.status) {
+                default: {
+                    console.log(exception.response?.status);
+                }
+            }
+        });
+    }
+    const handleCreateBanner = ():void =>{
+        for(let arrIdx in allBanners){
+            if(allBanners[arrIdx].id === -1)return;
+        }
+        let mutableBanners = [...allBanners, bannerTemplateFactory()];
+        setAllBanners(mutableBanners);
+        handleSearchEvent(' ');//BUG - не появляется элемент
     }
     const getCategoryNames = (arr: ICategory[] | undefined): string[] => {
         if (arr === undefined) return [];
         let array: string[] = [];
         arr.forEach(element => array.push(element.name));
         return array;
-    }
+    };
     /*HOOKS */
     const [allBanners, setAllBanners] = useState<IBanner[]>([]);//for first time -> useEffect -> axios
     const [displayedBanners, setDisplayedBanners] = useState<IBanner[]>([]);//for first time -> useEffect -> copy from allBanners
@@ -46,18 +79,6 @@ export const BannerPage: React.FC = (): JSX.Element => {
     const [selectedBanner, setSelectedBanner] = useState<IBanner>();
     const jwt = useSelector<jwtState, string>((state) => state.jwtToken);//authorization header
     const updateBannersData = () => {
-        const bannerPromise = AppAPI.getBanners(jwt);
-        bannerPromise.then(data => {
-            setAllBanners(data.data);
-            setDisplayedBanners(data.data);
-        }).catch((reason: AxiosError) => {
-            if (reason.response!.status === 401) {
-                console.log("Unauthorized!");
-            }
-            else console.log(reason.message);
-        });
-    }
-    useEffect(() => {
         const bannerPromise = AppAPI.getBanners(jwt);
         bannerPromise.then(data => {
             setAllBanners(data.data);
@@ -88,6 +109,9 @@ export const BannerPage: React.FC = (): JSX.Element => {
             }
             else console.log(reason.message);
         });
+    }
+    useEffect(() => {
+        updateBannersData();
     }, [jwt]);//didMount()
     return (
         <div className="container" >
@@ -101,7 +125,7 @@ export const BannerPage: React.FC = (): JSX.Element => {
                     >
                         <button className="btn btn-primary" type="button"
                             style={{ backgroundColor: "#f06292", borderColor: "#f06292", marginTop: "auto" }}
-                            onClick={() => { }}>
+                            onClick={handleCreateBanner}>
                             Create new banner
                         </button>
                     </ShowListComponent>
@@ -138,13 +162,15 @@ export const BannerPage: React.FC = (): JSX.Element => {
                                             uniqueStrings={getCategoryNames(allCategories)}
                                             alreadySelected={getCategoryNames(selectedBanner.linkedCategories)}
                                             onItemClick={(selected: string[]) => {
-                                                let arr : ICategory[] = [];
-                                                for(let item in allCategories){
-                                                   if(selected.indexOf(allCategories[item].name) !== -1){
-                                                    arr.push(allCategories[item]);
-                                                   }
+                                                let arr: ICategory[] = [];
+                                                for (let item in allCategories) {
+                                                    if (selected.indexOf(allCategories[item].name) !== -1) {
+                                                        arr.push(allCategories[item]);
+                                                    }
                                                 }
-                                                
+                                                let mutableBanner = Object.assign({}, selectedBanner);  //{...selectedBanner};
+                                                mutableBanner.linkedCategories = arr;
+                                                setSelectedBanner(mutableBanner);
                                             }}
 
                                         ></MultiSelector>
@@ -162,10 +188,9 @@ export const BannerPage: React.FC = (): JSX.Element => {
                         }
                         <div style={{ display: "flex", marginTop: "auto", width: "100%", justifyContent: "space-between", alignSelf: "flex-end" }}>
                             <button type="button" className="btn btn-primary" onClick={saveBanner}>save</button>
-                            <button type="button" className="btn btn-primary">delete</button>
+                            <button type="button" className="btn btn-primary" onClick={deleteBanner}>delete</button>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div >
