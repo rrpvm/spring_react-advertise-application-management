@@ -8,18 +8,7 @@ import { ICategory } from "../interfaces/ICategory";
 import { jwtState } from "../store/reducers/jwtTokenReducer";
 import { MultiSelector } from "../components/MultiSelector";
 
-export const BannerPage: React.FC = () => {
-    let handleSearchEvent = (e: string): void => {
-
-
-    /**
-     * Utilis
-     **/
-    /*let addBanner = (newBanner: IBanner) => {
-        setAllBanners(oldBanners => [...oldBanners, newBanner]);
-        console.log(allBanners);
-    }*/
-    /*HANDLERS */
+export const BannerPage: React.FC = (): JSX.Element => {
     const handleSearchEvent = (e: string): void => {
 
         setDisplayedBanners(allBanners.filter(banner => {
@@ -78,7 +67,6 @@ export const BannerPage: React.FC = () => {
 
 
     }, [jwt]);//didMount()
-
     return (
         <div className="container" >
             <div className="row" style={{ flexWrap: "nowrap", marginTop: "5vh" }}>
@@ -150,4 +138,4 @@ export const BannerPage: React.FC = () => {
             </div>
         </div >
     );
-};
+}

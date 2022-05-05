@@ -40,13 +40,7 @@ class API {
                 "Authorization":"Bearer ".concat(jwtToken)
             }
         };
-<<<<<<< Updated upstream
-        const request =  await axios.put<string>(`${this.urlPrivate}/banners/save/${banner.id}`,{
-           banner,
-        }, config);
-=======
         const request =  await axios.put<string>(`${this.urlPrivate}/banners/save/${banner.id}`,banner, config);
->>>>>>> Stashed changes
         return request;
     };
     async getCategories(jwtToken:string) {
