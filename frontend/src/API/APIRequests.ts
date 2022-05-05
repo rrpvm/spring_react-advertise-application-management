@@ -40,7 +40,7 @@ class API {
             }
         };
         const request =  await axios.put<string>(`${this.urlPrivate}/banners/save/${banner.id}`,{
-            bannerToSave : banner,
+           banner,
         }, config);
         return request;
     };

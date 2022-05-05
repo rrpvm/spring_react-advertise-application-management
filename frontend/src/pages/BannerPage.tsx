@@ -12,15 +12,6 @@ import { jwtState } from "../store/reducers/jwtTokenReducer";
 
 
 export const BannerPage: React.FC = () => {
-
-    /**
-     * Utilis
-     **/
-    /*let addBanner = (newBanner: IBanner) => {
-        setAllBanners(oldBanners => [...oldBanners, newBanner]);
-        console.log(allBanners);
-    }*/
-    /*HANDLERS */
     let handleSearchEvent = (e: string): void => {
         setDisplayedBanners(allBanners.filter(banner => {
             return banner.name.toLowerCase().indexOf(e) !== -1 //if 0 or bigger -> exist

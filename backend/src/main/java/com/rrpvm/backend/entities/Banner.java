@@ -1,5 +1,7 @@
 package com.rrpvm.backend.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 @Entity
@@ -17,6 +19,7 @@ public class Banner {
     @Column(name = "is_deleted")
     private boolean isDeleted;
     @ManyToMany(targetEntity = Category.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore//break infinity loop
     private List<Category> categories;//names
     public Banner(Integer id, String name, String textField, Double price, boolean isDeleted, List<Category> linkedCategories) {
         this.id = id;

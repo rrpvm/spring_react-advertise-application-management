@@ -4,7 +4,7 @@ import { IMultiselectable } from "../interfaces/IMulltiselectable";
 
 
 
-export const MultiSelector: React.FC<IMultiselectable> = ({ uniqueStrings, alreadySelected }) => {
+export const MultiSelector: React.FC<IMultiselectable> = ({ uniqueStrings, alreadySelected }) :JSX.Element=> {
     const [bShowSelect, showSelect] = useState(false);
     const [selectedItems, setSelectedItems] = useState<string[]>(alreadySelected);
     const [inAvaliableItems, setAvaliableItems] = useState<string[]>(uniqueStrings);

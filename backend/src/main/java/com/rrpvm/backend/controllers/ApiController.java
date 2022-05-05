@@ -4,13 +4,11 @@ import com.rrpvm.backend.daos.BannerRepository;
 import com.rrpvm.backend.daos.CategoryRepository;
 import com.rrpvm.backend.entities.Banner;
 import com.rrpvm.backend.entities.Category;
+import com.rrpvm.backend.models.BannerUpdateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.persistence.EntityManager;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin("*")
@@ -32,11 +30,13 @@ public class ApiController {
         return categories;
     }
     @PutMapping("/banners/save/{id}")
-    private ResponseEntity<?> saveBanner(@PathVariable("id")int id,@RequestBody Banner customBanner) {
-        List<Banner> banners = bannerRepository.findAll();
+    private ResponseEntity<?> saveBanner(@PathVariable("id")int id, @RequestBody BannerUpdateRequest requestPayload) {
+            BannerUpdateRequest  request = requestPayload;
+
+     /*   List<Banner> banners = bannerRepository.findById(id).get();
         Banner changedBanner = (banners.stream().filter(banner -> banner.getId() == id).collect(Collectors.toList())).get(0);
         System.out.println(changedBanner.toString());
-        System.out.println(customBanner.toString());
+        System.out.println(payload.get(""));*/
         return ResponseEntity.ok("success");
     }
 }
