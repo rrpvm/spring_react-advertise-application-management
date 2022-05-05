@@ -9,9 +9,8 @@ import { jwtState } from "../store/reducers/jwtTokenReducer";
 import { MultiSelector } from "../components/MultiSelector";
 
 export const BannerPage: React.FC = () => {
-<<<<<<< Updated upstream
     let handleSearchEvent = (e: string): void => {
-=======
+
 
     /**
      * Utilis
@@ -22,7 +21,7 @@ export const BannerPage: React.FC = () => {
     }*/
     /*HANDLERS */
     const handleSearchEvent = (e: string): void => {
->>>>>>> Stashed changes
+
         setDisplayedBanners(allBanners.filter(banner => {
             return banner.name.toLowerCase().indexOf(e) !== -1 //if 0 or bigger -> exist
         }))

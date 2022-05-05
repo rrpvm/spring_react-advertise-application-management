@@ -1,9 +1,7 @@
 package com.rrpvm.backend.entities;
 
-<<<<<<< Updated upstream
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
-=======
->>>>>>> Stashed changes
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
