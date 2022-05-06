@@ -17,7 +17,8 @@ export const LoginPage: React.FC = () => {
     const handleLoginChange = (e: React.ChangeEvent<HTMLInputElement>) => setLogin(e.target.value);
     const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value);
     return (
-        <div className="container">
+        <div className="container" style={{marginTop:"15px"}}>
+            <h2>Authorization form</h2>
             <form method="post" onSubmit={(e) => {
                 handleFormSend(e);
             }}>
@@ -31,7 +32,7 @@ export const LoginPage: React.FC = () => {
                 </div>
                 <button type="submit" className="btn btn-primary">Submit</button>
             </form>
-            {jwt}
+            <span>current jwt token : {jwt}</span>
         </div >
     )
 }

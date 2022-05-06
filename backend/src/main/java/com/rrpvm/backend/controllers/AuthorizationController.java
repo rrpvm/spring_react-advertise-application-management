@@ -50,6 +50,7 @@ public class AuthorizationController {
     @GetMapping(value = "${jwt.refresh.token.uri}")
     public ResponseEntity<?> refreshAuthenticationToken(HttpServletRequest request) {
         String authToken = request.getHeader(tokenHeader);
+        if(authToken == null || authToken.length() < 7)return ResponseEntity.badRequest().body(null);
         final String token = authToken.substring(7);
         if (jwtTokenUtil.canTokenBeRefreshed(token)) {
             String refreshedToken = jwtTokenUtil.refreshToken(token);

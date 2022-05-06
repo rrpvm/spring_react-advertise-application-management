@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
+import org.springframework.transaction.UnexpectedRollbackException;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -53,7 +55,7 @@ public class ApiController {
     }
 
     @PutMapping("/categories/save/{id}")
-    private ResponseEntity<Nullable> saveCategory(@PathVariable("id") Long id, @RequestBody Category customCategory, @RequestParam(name = "createNew") boolean params) throws UnUniqueDataRequestedException {
+    private ResponseEntity<Nullable> saveCategory(@PathVariable("id") Long id, @RequestBody Category customCategory, @RequestParam(name = "createNew") String params) throws UnUniqueDataRequestedException {
         if (customCategory == null) return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(null);
         Category withUniqueName = categoryRepository.findCategoryByName(customCategory.getName());
         Category withUniqueRequestId = categoryRepository.findCategoryByRequestId(customCategory.getRequestId());
@@ -61,8 +63,13 @@ public class ApiController {
         if (!isUnique) {
             throw new UnUniqueDataRequestedException();
         } else {
-            if (params) {
-                categoryRepository.addNewCategory(customCategory);
+            if (params.equals("true")) {
+                try{
+                    categoryRepository.addNewCategory(customCategory);
+                }
+                catch (UnexpectedRollbackException unexpectedRollbackException){
+                    System.out.println(unexpectedRollbackException.getCause());
+                }
             } else categoryRepository.save(customCategory);
         }
         return ResponseEntity.ok(null);

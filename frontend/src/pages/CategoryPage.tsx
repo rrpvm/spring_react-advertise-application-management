@@ -6,20 +6,38 @@ import { ShowListComponent } from "../components/ShowListComponent";
 import { ICategory } from "../interfaces/ICategory";
 import { jwtState } from "../store/reducers/jwtTokenReducer";
 import APP from "../API/APIRequests";
-
+import { ALERTTIME } from "../constants";
+type pair<T, S> = {
+    first: T
+    second: S;
+}
 export const CategoryPage: React.FC = () => {
-    const saveCategory = () =>{
-        const responce = APP.saveCategory(jwt, searchParams, selectedCategory);
+    const showMessage = (msg: string, isError: boolean = true) => {
+        setCurrentMessage({ first: msg, second: isError });
+        setTimeout(() => {
+            setCurrentMessage({ first: '', second: false });
+        }, ALERTTIME);
+    }
+    const saveCategory = () => {
+        let mutableSearchParam: URLSearchParams = new URLSearchParams();
+        if (selectedCategory?.id !== -1) {
+            mutableSearchParam.append('createNew', 'false');
+        } else {
+            mutableSearchParam.append('createNew', 'true');
+        }
+        const responce = APP.saveCategory(jwt, mutableSearchParam, selectedCategory);
         responce?.then(() => {
+            console.log('success');
+            showMessage("saved success !", false);
             updateCategoriesData();
         }).catch((exception: AxiosError) => {
             switch (exception.response?.status) {
                 case 409: {
-                    console.log('category name | request id already exist!');
+                    showMessage('category name | request id already exist!');
                     break;
                 }
                 case 402: {
-                    console.log('category name | request id cannot be empty');
+                    showMessage('category name | request id cannot be empty');
                     break;
                 }
                 default: {
@@ -28,35 +46,32 @@ export const CategoryPage: React.FC = () => {
             }
         });
     }
-    const deleteCategory = () =>{
+    const deleteCategory = () => {
         const responce = APP.deleteCategory(jwt, selectedCategory?.id);
         responce?.then(() => {
             updateCategoriesData();
+            showMessage("deleted success !", false);
         }).catch((exception: AxiosError) => {
             switch (exception.response?.status) {
                 default: {
                     console.log(exception.response?.status);
                 }
             }
-        });       
+        });
     }
     const handleSearchEvent = (e: string): void => {
         setDisplayedCategories(allCategories.filter(category => {
-            return category.name.toLowerCase().indexOf(e) !== -1 ;
+            return category.name.toLowerCase().indexOf(e) !== -1;
         }))
     }
     const handleSelectCategory = (categorySelected: ICategory): void => {
-        if (categorySelected.id !== -1) {
-            setSearchParams({ ['createNew']: 'false' });
-        }
-        else setSearchParams({ ['createNew']: 'true' });
         setSelectedCategory(categorySelected);
     }
     const categoryTemplateFactory = (): ICategory => {
         return {
             id: -1,
-            name : 'new category',
-            requestId : 'new request id'
+            name: 'new category',
+            requestId: 'new request id'
         }
     }
     const handleCreateCategory = (): void => {
@@ -80,18 +95,18 @@ export const CategoryPage: React.FC = () => {
             }
         }).catch((reason: AxiosError) => {
             if (reason.response!.status === 401) {
-                console.log("Unauthorized!");
+                showMessage("Unauthorized!");
             }
             else console.log(reason.message);
         });
     }
-    useEffect(()=>{
+    useEffect(() => {
         updateCategoriesData();
-    },[]);
+    }, []);
     const [allCategories, setAllCategories] = useState<ICategory[]>([]);
     const [displayedCategories, setDisplayedCategories] = useState<ICategory[]>([]);
     const [selectedCategory, setSelectedCategory] = useState<ICategory>();
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [currentMessage, setCurrentMessage] = useState<pair<string, boolean>>({ first: "", second: false }); /* second - isError */
     const jwt = useSelector<jwtState, string>((state) => state.jwtToken);//authorization header
     return (
         <div className="container" >
@@ -131,11 +146,17 @@ export const CategoryPage: React.FC = () => {
                                             mutableCategory.requestId = e.target.value;
                                             setSelectedCategory(mutableCategory);
                                         }}></input>
-                                    </li>                                   
+                                    </li>
                                 </ul>
                             ) : <></>
                         }
-                        <div className="alert alert-danger" style={{width:"100%",top:"85%",position:"absolute",display:'none'}}></div>
+                        <div
+                            className={
+                                currentMessage.first.length !== 0 ? currentMessage.second === true ? "alert alert-danger show-alert" : "alert alert-success show-alert" : "alert  hidden-alert"
+                            }
+                            style={{ width: "100%", top: "85%", position: "absolute" }}>
+                            {currentMessage.first}
+                        </div>
                         <div style={{ display: "flex", marginTop: "auto", width: "100%", justifyContent: "space-between", alignSelf: "flex-end" }}>
                             <button type="button" className="btn btn-primary" onClick={saveCategory}>save</button>
                             <button type="button" className="btn btn-primary" onClick={deleteCategory}>delete</button>

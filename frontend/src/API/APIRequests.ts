@@ -4,14 +4,14 @@ import { IBanner } from "../interfaces/IBanner";
 import { ICategory } from "../interfaces/ICategory";
 import { IRequestConfig } from "../interfaces/IRequestConfig";
 
-const requestConfigFabric = (jwt : string):IRequestConfig =>{
+const requestConfigFabric = (jwt: string): IRequestConfig => {
     const config: IRequestConfig = {
         headers: {
             "Authorization": "Bearer ".concat(jwt)
         }
     };
     return config;
-} 
+}
 class API {
     constructor() {
         axios.defaults.headers.post['Content-Type'] = 'application/json';
@@ -25,6 +25,10 @@ class API {
         }, requestConfigFabric(jwtToken));
         return responce.data.token;
     };
+    async refreshToken(jwtToken: string) {
+        const responce = await axios.get(`${this.urlPublic}/refresh`, requestConfigFabric(jwtToken));
+        return responce.data.token;
+    }
     async getBanners(jwtToken: string) {
         const request = await axios.get<IBanner[]>(`${this.urlPrivate}/getBanners`, requestConfigFabric(jwtToken));
         return request;
@@ -33,24 +37,24 @@ class API {
         const request = await axios.get<ICategory[]>(`${this.urlPrivate}/getCategories`, requestConfigFabric(jwtToken));
         return request;
     };
-    saveBanner(jwtToken: string, queryParams : URLSearchParams,banner: IBanner | undefined) {
+    saveBanner(jwtToken: string, queryParams: URLSearchParams, banner: IBanner | undefined) {
         if (banner === undefined) return;
         const request = axios.put<string>(`${this.urlPrivate}/banners/save/${banner.id}?${queryParams.toString()}`, banner, requestConfigFabric(jwtToken));
         return request;
     };
-    saveCategory(jwtToken: string, queryParams : URLSearchParams,category: ICategory | undefined) {
+    saveCategory(jwtToken: string, queryParams: URLSearchParams, category: ICategory | undefined) {
         if (category === undefined) return;
         const request = axios.put<string>(`${this.urlPrivate}/categories/save/${category.id}?${queryParams.toString()}`, category, requestConfigFabric(jwtToken));
         return request;
-    };  
-    deleteBanner(jwtToken:string, id : number | undefined){
+    };
+    deleteBanner(jwtToken: string, id: number | undefined) {
         if (id === undefined || id <= 0) return;
         const request = axios.delete<string>(`${this.urlPrivate}/banners/delete/${id}`, requestConfigFabric(jwtToken));
         return request;
     };
-    deleteCategory(jwtToken:string, id : number | undefined){
+    deleteCategory(jwtToken: string, id: number | undefined) {
         if (id === undefined || id <= 0) return;
-        const request = axios.put<string>(`${this.urlPrivate}/categories/delete/${id}`,null, requestConfigFabric(jwtToken));
+        const request = axios.put<string>(`${this.urlPrivate}/categories/delete/${id}`, null, requestConfigFabric(jwtToken));
         return request;
     };
 }

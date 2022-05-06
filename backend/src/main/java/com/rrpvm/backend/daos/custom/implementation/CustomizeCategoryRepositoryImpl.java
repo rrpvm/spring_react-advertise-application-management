@@ -2,8 +2,10 @@ package com.rrpvm.backend.daos.custom.implementation;
 
 import com.rrpvm.backend.daos.custom.CustomizeCategoryRepository;
 import com.rrpvm.backend.entities.Category;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceContext;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -13,9 +15,9 @@ public class CustomizeCategoryRepositoryImpl implements CustomizeCategoryReposit
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
-    public boolean addNewCategory(Category category) {
+    public boolean addNewCategory(final Category category) {
         int result = 0;
         try {
             Query query = entityManager.createNativeQuery("insert into categories (name, request_id) VALUES (?1,?2)");
@@ -27,7 +29,6 @@ public class CustomizeCategoryRepositoryImpl implements CustomizeCategoryReposit
         }
         return result == 1;
     }
-
     @Transactional
     @Override
     public boolean isUndependent(Long categoryId) {

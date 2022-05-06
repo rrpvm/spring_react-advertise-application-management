@@ -1,5 +1,5 @@
 import { ChangeEvent, useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { AxiosError } from "axios";
 import { ShowListComponent } from "../components/ShowListComponent";
@@ -8,6 +8,7 @@ import { jwtState } from "../store/reducers/jwtTokenReducer";
 import API from "../API/APIRequests";
 import { IBanner } from "../interfaces/IBanner";
 import { ICategory } from "../interfaces/ICategory";
+import { ALERTTIME } from "../constants";
 
 const bannerTemplateFactory = (): IBanner => {
     return {
@@ -22,7 +23,6 @@ type pair<T, S> = {
     first: T
     second: S;
 }
-const ALERTTIME: number = 5000;
 export const BannerPage: React.FC = (): JSX.Element => {
     const handleSearchEvent = (e: string): void => {
         setDisplayedBanners(allBanners.filter(banner => {
@@ -30,10 +30,6 @@ export const BannerPage: React.FC = (): JSX.Element => {
         }))
     }
     const handleSelectBanner = (bannerSelected: IBanner): void => {
-        if (bannerSelected.id !== -1) {
-            setSearchParams({ ['createNew']: 'false' });
-        }
-        else setSearchParams({ ['createNew']: 'true' });
         setSelectedBanner(bannerSelected);
     }
     const showMessage = (msg: string, isError: boolean) => {
@@ -43,7 +39,12 @@ export const BannerPage: React.FC = (): JSX.Element => {
         }, ALERTTIME);
     }
     const saveBanner = (): void => { //2 params : "delete or save"
-        const responce = API.saveBanner(jwt, searchParams, selectedBanner);
+        let mutableSearchParam = new URLSearchParams();
+        if (selectedBanner?.id !== -1) {
+            mutableSearchParam.append('createNew', 'false');
+        }
+        else mutableSearchParam.append('createNew', 'false');
+        const responce = API.saveBanner(jwt, mutableSearchParam, selectedBanner);
         responce?.then(() => {
             updateBannersData();
             showMessage('save successed!', false);
@@ -67,6 +68,7 @@ export const BannerPage: React.FC = (): JSX.Element => {
         const responce = API.deleteBanner(jwt, selectedBanner?.id);
         responce?.then(() => {
             updateBannersData();
+            showMessage('deleted success!', false);
         }).catch((exception: AxiosError) => {
             switch (exception.response?.status) {
                 case 409: {
@@ -100,8 +102,7 @@ export const BannerPage: React.FC = (): JSX.Element => {
     const [allCategories, setCategories] = useState<ICategory[]>([]);//from storage(will) todo:
     const [selectedBanner, setSelectedBanner] = useState<IBanner>();
     const [currentMessage, setCurrentMessage] = useState<pair<string, boolean>>({ first: "", second: false }); /* second - isError */
-    const [searchParams, setSearchParams] = useSearchParams();
-    const jwt = useSelector<jwtState, string>((state) => state.jwtToken);//authorization header
+    const jwt = useSelector<jwtState, string>((state) => state.jwtToken);
     const updateBannersData = () => {
         const bannerPromise = API.getBanners(jwt);
         bannerPromise.then(data => {
@@ -214,7 +215,9 @@ export const BannerPage: React.FC = (): JSX.Element => {
                             className={
                                 currentMessage.first.length !== 0 ? currentMessage.second === true ? "alert alert-danger show-alert" : "alert alert-success show-alert" : "alert  hidden-alert"
                             }
-                            style={{ width: "100%", top: "85%", position: "absolute" }}>{currentMessage.first}</div>
+                            style={{ width: "100%", top: "85%", position: "absolute" }}>
+                            {currentMessage.first}
+                        </div>
                         <div style={{ display: "flex", marginTop: "auto", width: "100%", justifyContent: "space-between", alignSelf: "flex-end" }}>
                             <button type="button" className="btn btn-primary" onClick={saveBanner}>save</button>
                             <button type="button" className="btn btn-primary" onClick={deleteBanner}>delete</button>

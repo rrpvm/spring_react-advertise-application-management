@@ -81,7 +81,7 @@ a:hover {
 .show-alert {
   opacity: 100%;
   animation: fadeIn;
-  animation-duration: .5s;
+  animation-duration: 0.5s;
   animation-timing-function: ease-in-out;
   animation-delay: 0ms;
   animation-iteration-count: 1;
@@ -96,4 +96,10 @@ a:hover {
 }
 .alert {
   transition: all 0.3s;
+}
+.page-not-found-text {
+  transition: all 0.4s;
+}
+.page-not-found-text:hover {
+  color: #ec407a !important;
 }
