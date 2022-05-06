@@ -1,10 +1,13 @@
-import axios from "axios";
+import axios, { AxiosError, AxiosPromise, AxiosResponse } from "axios";
 import { URLSearchParams } from "url";
 import { IBanner } from "../interfaces/IBanner";
 import { ICategory } from "../interfaces/ICategory";
 import { IRequestConfig } from "../interfaces/IRequestConfig";
 
 const requestConfigFabric = (jwt: string): IRequestConfig => {
+    if (jwt === undefined) {
+        jwt = '';
+    }
     const config: IRequestConfig = {
         headers: {
             "Authorization": "Bearer ".concat(jwt)
@@ -18,12 +21,18 @@ class API {
     }
     readonly urlPrivate: string = 'http://localhost:8080/api/private';
     readonly urlPublic: string = 'http://localhost:8080';// bid = endpoint - public
-    async authenticate(login: string, password: string, jwtToken: string) {
-        const responce = await axios.post(`${this.urlPublic}/authenticate`, {
+    async authenticate(login: string, password: string, jwtToken: string, onSuccessCall: CallableFunction, onFailCallback: CallableFunction) {
+        const response = await axios.post(`${this.urlPublic}/authenticate`, {
             'login': login,
             'password': password
-        }, requestConfigFabric(jwtToken));
-        return responce.data.token;
+        }, requestConfigFabric(jwtToken)).then((data: AxiosResponse) => {
+            onSuccessCall(data.data.token);
+        }).catch((exception: AxiosError) => {
+
+            if (exception.response?.status === 401)/*bad credentials */ {
+                onFailCallback(exception.response.data);
+            }
+        });
     };
     async refreshToken(jwtToken: string) {
         const responce = await axios.get(`${this.urlPublic}/refresh`, requestConfigFabric(jwtToken));

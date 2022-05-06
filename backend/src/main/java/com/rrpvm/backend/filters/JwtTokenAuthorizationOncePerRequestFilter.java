@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.rrpvm.backend.exceptions.AuthenticationFailException;
 import com.rrpvm.backend.handlers.ExceptionTranslator;
 import com.rrpvm.backend.jwt.JwtTokenUtil;
+import io.jsonwebtoken.MalformedJwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,7 @@ public class JwtTokenAuthorizationOncePerRequestFilter extends OncePerRequestFil
     private HandlerExceptionResolver resolver;
     @Value("${jwt.http.request.header}")
     private String tokenHeader;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException, ExpiredJwtException {
         //logger.warn("Authentication Request For", request.getRequestURL());
@@ -57,6 +59,8 @@ public class JwtTokenAuthorizationOncePerRequestFilter extends OncePerRequestFil
                 logger.warn("JWT_TOKEN_UNABLE_TO_GET_USERNAME");
             } catch (ExpiredJwtException e) {
                 logger.warn("JWT_TOKEN_EXPIRED");
+            } catch (MalformedJwtException malformedJwtException) {
+                logger.warn("JWT strings must contain exactly 2 period characters");
             }
         } else {
             logger.warn("JWT_TOKEN_DOES_NOT_START_WITH_BEARER_STRING");

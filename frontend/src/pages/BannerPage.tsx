@@ -1,5 +1,4 @@
 import { ChangeEvent, useEffect, useState } from "react";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { AxiosError } from "axios";
 import { ShowListComponent } from "../components/ShowListComponent";
@@ -9,6 +8,7 @@ import API from "../API/APIRequests";
 import { IBanner } from "../interfaces/IBanner";
 import { ICategory } from "../interfaces/ICategory";
 import { ALERTTIME } from "../constants";
+import { deleteBannerResponseException, handleBasicApiStatusCodeResponce, saveBannerResponceExceptions } from "../API/ResponseExceptionHandler";
 
 const bannerTemplateFactory = (): IBanner => {
     return {
@@ -24,20 +24,15 @@ type pair<T, S> = {
     second: S;
 }
 export const BannerPage: React.FC = (): JSX.Element => {
-    const handleSearchEvent = (e: string): void => {
-        setDisplayedBanners(allBanners.filter(banner => {
-            return banner.name.toLowerCase().indexOf(e) !== -1 //if 0 or bigger -> exist
-        }))
-    }
-    const handleSelectBanner = (bannerSelected: IBanner): void => {
-        setSelectedBanner(bannerSelected);
-    }
-    const showMessage = (msg: string, isError: boolean) => {
-        setCurrentMessage({ first: msg, second: isError });
-        setTimeout(() => {
-            setCurrentMessage({ first: '', second: false });
-        }, ALERTTIME);
-    }
+    /*HOOKS */
+    const [allBanners, setAllBanners] = useState<IBanner[]>([]);
+    const [displayedBanners, setDisplayedBanners] = useState<IBanner[]>([]);
+    const [allCategories, setCategories] = useState<ICategory[]>([]);
+    const [selectedBanner, setSelectedBanner] = useState<IBanner>();
+    const [currentMessage, setCurrentMessage] = useState<pair<string, boolean>>({ first: "", second: false }); /* second - isError */
+    const jwt = useSelector<jwtState, string>((state) => state.jwtToken);
+
+    /*<----------------NETWORK FUNCTIONS------------------>*/
     const saveBanner = (): void => { //2 params : "delete or save"
         let mutableSearchParam = new URLSearchParams();
         if (selectedBanner?.id !== -1) {
@@ -46,41 +41,55 @@ export const BannerPage: React.FC = (): JSX.Element => {
         else mutableSearchParam.append('createNew', 'false');
         const responce = API.saveBanner(jwt, mutableSearchParam, selectedBanner);
         responce?.then(() => {
-            updateBannersData();
-            showMessage('save successed!', false);
-        }).catch((exception: AxiosError) => {
-            switch (exception.response?.status) {
-                case 409: {
-                    showMessage('banner name is already exist!', true);
-                    break;
-                }
-                case 402: {
-                    showMessage('linked categories cannot be empty!', true);
-                    break;
-                }
-                default: {
-                    showMessage('internal error on server!', true);
-                }
-            }
-        });
+            updateBannersData(() => showMessage('save successed!', false));
+        }).catch((exception: AxiosError) => showMessage(saveBannerResponceExceptions(exception), true));
     };
     const deleteBanner = (): void => {
         const responce = API.deleteBanner(jwt, selectedBanner?.id);
         responce?.then(() => {
-            updateBannersData();
-            showMessage('deleted success!', false);
-        }).catch((exception: AxiosError) => {
-            switch (exception.response?.status) {
-                case 409: {
-                    showMessage('incorrect index send to server!', true);
-                    break;
-                }
-                default: {
-                    console.log(exception.response?.status);
-                }
-            }
-        });
+            updateBannersData(() => showMessage('deleted success!', false));
+        }).catch((exception: AxiosError) => showMessage(deleteBannerResponseException(exception), true));
     }
+    const updateBannersData = (callbackOnSuccess: CallableFunction) => {
+        const bannerPromise = API.getBanners(jwt);
+        const categoryPromise = API.getCategories(jwt);
+        bannerPromise.then(data => {
+            callbackOnSuccess();//must be independent, if banners are updated -> success ( you can show display message)
+            setAllBanners(data.data);
+            setDisplayedBanners(data.data);
+            try {
+                setSelectedBanner(data.data[0]);
+            }
+            catch (e) {
+                console.log('banners data is null');
+            }
+        }).catch((reason: AxiosError) => showMessage(handleBasicApiStatusCodeResponce(reason), true));
+        categoryPromise.then(data => {
+            try {
+                setCategories(data.data);
+            }
+            catch (e) {
+                console.log('categories data is null');
+            }
+        }).catch((reason: AxiosError) => showMessage(handleBasicApiStatusCodeResponce(reason), true));
+    }
+    /*<--------------------------END OF NETWORK FUNCTIONS--------------------->*/
+
+    /*<--------------------------NON-SIDE EFFECT(?) FUNCTIONS--------------------->*/
+    const getCategoryNames = (arr: ICategory[] | undefined): string[] => {
+        if (arr === undefined) return [];
+        let array: string[] = []; arr.forEach(element => array.push(element.name));
+        return array;
+    };
+    const showMessage = (msg: string, isError: boolean) => {//side effect but it can be here
+        setCurrentMessage({ first: msg, second: isError });
+        setTimeout(() => {
+            setCurrentMessage({ first: '', second: false });
+        }, ALERTTIME);
+    }
+    /*<--------------------------THE END OF NON-SIDE EFFECT(?) FUNCTIONS--------------------->*/
+
+    /*<--------------------------SIDE EFFECT(?) FUNCTIONS--------------------->*/
     const handleCreateBanner = (): void => {
         for (let arrIdx in allBanners) {
             if (allBanners[arrIdx].id === -1) return;
@@ -88,56 +97,19 @@ export const BannerPage: React.FC = (): JSX.Element => {
         let mutableBanners = [...allBanners, bannerTemplateFactory()];
         setAllBanners(mutableBanners);
         setDisplayedBanners(mutableBanners);
-
     }
-    const getCategoryNames = (arr: ICategory[] | undefined): string[] => {
-        if (arr === undefined) return [];
-        let array: string[] = [];
-        arr.forEach(element => array.push(element.name));
-        return array;
-    };
-    /*HOOKS */
-    const [allBanners, setAllBanners] = useState<IBanner[]>([]);//for first time -> useEffect -> axios
-    const [displayedBanners, setDisplayedBanners] = useState<IBanner[]>([]);//for first time -> useEffect -> copy from allBanners
-    const [allCategories, setCategories] = useState<ICategory[]>([]);//from storage(will) todo:
-    const [selectedBanner, setSelectedBanner] = useState<IBanner>();
-    const [currentMessage, setCurrentMessage] = useState<pair<string, boolean>>({ first: "", second: false }); /* second - isError */
-    const jwt = useSelector<jwtState, string>((state) => state.jwtToken);
-    const updateBannersData = () => {
-        const bannerPromise = API.getBanners(jwt);
-        bannerPromise.then(data => {
-            setAllBanners(data.data);
-            setDisplayedBanners(data.data);
-            try {
-                setSelectedBanner(data.data[0]);
-            }
-            catch (e) {
-                console.log(e);
-            }
-        }).catch((reason: AxiosError) => {
-            if (reason.response!.status === 401) {
-                showMessage('Access denied, do authorization!', true);
-            }
-            else console.log(reason.message);
-        });
-        const categoryPromise = API.getCategories(jwt);
-        categoryPromise.then(data => {
-            try {
-                setCategories(data.data);
-            }
-            catch (e) {
-                console.log(e);
-            }
-        }).catch((reason: AxiosError) => {
-            if (reason.response!.status === 401) {
-                showMessage('Access denied, do authorization!', true);
-            }
-            else console.log(reason.message);
-        });
+    const handleSelectBanner = (bannerSelected: IBanner): void => {
+        setSelectedBanner(bannerSelected);
+    }
+    const handleSearchEvent = (e: string): void => {
+        setDisplayedBanners(allBanners.filter(banner => {
+            return banner.name.toLowerCase().indexOf(e) !== -1 //if 0 or bigger -> exist
+        }))
     }
     useEffect(() => {
-        updateBannersData();
+        updateBannersData(() => console.log('update data successed'));
     }, [jwt]);//didMount()
+    /*<--------------------------END OF SIDE EFFECT(?) FUNCTIONS--------------------->*/
     return (
         <div className="container" >
             <div className="row" style={{ flexWrap: "nowrap", marginTop: "5vh" }}>

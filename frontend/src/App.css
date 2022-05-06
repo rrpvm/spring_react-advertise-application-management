@@ -1,6 +1,7 @@
 html,
 body {
   height: 100%;
+  overflow: hidden;
 }
 * {
   box-sizing: border-box;
@@ -102,4 +103,27 @@ a:hover {
 }
 .page-not-found-text:hover {
   color: #ec407a !important;
+}
+.pop-alert {
+  animation: boundingEase;
+  animation-duration: 1.4s;
+  animation-timing-function: ease-in-out;
+  animation-delay: 0ms;
+  animation-iteration-count: 1;
+  right: 0%;
+  top: 5%;
+  position: absolute;
+  width: 30%;
+}
+.pop-alert-hidden {
+  left: 130%;
+  display: none;
+}
+@keyframes boundingEase {
+  0% {
+    right: -40%;
+  }
+  100% {
+    right: 0%;
+  }
 }
