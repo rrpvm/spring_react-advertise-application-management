@@ -127,3 +127,12 @@ a:hover {
     right: 0%;
   }
 }
+.category-pickable{
+  cursor: pointer;
+}
+.picked{
+  color: #ec407a !important;
+}
+.selected-list-page{
+  color: #ec407a !important;
+}
