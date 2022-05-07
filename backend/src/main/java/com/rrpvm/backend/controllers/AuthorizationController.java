@@ -35,14 +35,12 @@ public class AuthorizationController {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
     @Autowired
-    private JdbcUserDetailsService jdbcUserDetailsService;//UserDetailsService
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private UserRepository userRepository;
 
     @PostMapping(value = "${jwt.get.token.uri}")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AdminLoginRequest authenticationRequest) throws AuthenticationException/* do login*/ {
         this.doAuthenticate(authenticationRequest.getLogin(), authenticationRequest.getPassword());
-        final UserDetails userDetails = jdbcUserDetailsService.loadUserByUsername(authenticationRequest.getLogin());
+        final UserDetails userDetails = userRepository.findByLogin(authenticationRequest.getLogin());
         final String token = jwtTokenUtil.generateToken(userDetails);
         return ResponseEntity.ok(new JwtTokenResponse(token));
     }
