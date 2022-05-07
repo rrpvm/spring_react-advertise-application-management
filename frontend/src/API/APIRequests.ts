@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosPromise, AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import { URLSearchParams } from "url";
 import { IBanner } from "../interfaces/IBanner";
 import { ICategory } from "../interfaces/ICategory";
@@ -42,8 +42,8 @@ class API {
         const request = await axios.get<IBanner[]>(`${this.urlPrivate}/getBanners`, requestConfigFabric(jwtToken));
         return request;
     };
-    async getCategories(jwtToken: string) {
-        const request = await axios.get<ICategory[]>(`${this.urlPrivate}/getCategories`, requestConfigFabric(jwtToken));
+    async getCategories(jwtToken: string) { //PUBLIC CUZ U NEED TO GET LIST OF CATEGORIES IN HOME PAGE
+        const request = await axios.get<ICategory[]>(`${this.urlPublic}/api/public/getCategories`, requestConfigFabric(jwtToken));
         return request;
     };
     saveBanner(jwtToken: string, queryParams: URLSearchParams, banner: IBanner | undefined) {
@@ -66,5 +66,9 @@ class API {
         const request = axios.put<string>(`${this.urlPrivate}/categories/delete/${id}`, null, requestConfigFabric(jwtToken));
         return request;
     };
+    getBannerByCategories(query: any) {
+        const request = axios.get<string>(`${this.urlPublic}/bid${query.search}`);
+        return request;
+    }
 }
 export default new API();

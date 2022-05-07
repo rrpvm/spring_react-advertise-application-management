@@ -7,6 +7,7 @@ import { ICategory } from "../interfaces/ICategory";
 import { jwtState } from "../store/reducers/jwtTokenReducer";
 import APP from "../API/APIRequests";
 import { ALERTTIME } from "../constants";
+import { deleteCategoryResponseExceptions, saveCategoryResponseExceptions } from "../API/ResponseExceptionHandler";
 type pair<T, S> = {
     first: T
     second: S;
@@ -27,23 +28,10 @@ export const CategoryPage: React.FC = () => {
         }
         const responce = APP.saveCategory(jwt, mutableSearchParam, selectedCategory);
         responce?.then(() => {
-            console.log('success');
             showMessage("saved success !", false);
             updateCategoriesData();
         }).catch((exception: AxiosError) => {
-            switch (exception.response?.status) {
-                case 409: {
-                    showMessage('category name | request id already exist!');
-                    break;
-                }
-                case 402: {
-                    showMessage('category name | request id cannot be empty');
-                    break;
-                }
-                default: {
-                    console.log(exception.response?.status);
-                }
-            }
+            showMessage(saveCategoryResponseExceptions(exception),true);
         });
     }
     const deleteCategory = () => {
@@ -52,11 +40,7 @@ export const CategoryPage: React.FC = () => {
             updateCategoriesData();
             showMessage("deleted success !", false);
         }).catch((exception: AxiosError) => {
-            switch (exception.response?.status) {
-                default: {
-                    console.log(exception.response?.status);
-                }
-            }
+            showMessage(deleteCategoryResponseExceptions(exception),true);
         });
     }
     const handleSearchEvent = (e: string): void => {

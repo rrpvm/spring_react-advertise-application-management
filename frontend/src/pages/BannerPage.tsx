@@ -146,7 +146,9 @@ export const BannerPage: React.FC = (): JSX.Element => {
                                         <input className="form-control" value={selectedBanner.price} onChange={(e: ChangeEvent<HTMLInputElement>) => {
                                             let mutableBanner = Object.assign({}, selectedBanner);  //{...selectedBanner};
                                             try {
+                                                if(e.target.value.match("[0-9]") || e.target.value.length === 0){                                                                                              
                                                 e.target.value.length === 0 ? mutableBanner.price = 0 : (mutableBanner.price = parseFloat(e.target.value));
+                                                }
                                             }
                                             catch (e) {
                                                 console.log(e);

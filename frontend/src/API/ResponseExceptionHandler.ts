@@ -49,11 +49,41 @@ export const saveBannerResponceExceptions = (exception: AxiosError): string => {
     }
     return retnValue;
 }
+export const saveCategoryResponseExceptions = (exception: AxiosError): string => {
+    let retnValue: string = '';
+    switch (exception.response?.status) {
+        case 409: {
+            retnValue = 'category name | request id already exist!';
+            break;
+        }
+        case 402: {
+            retnValue = 'category name | request id cannot be empty!';
+            break;
+        }
+        default: {
+            retnValue = 'internal error on server!';
+        }
+    }
+    return retnValue;
+}
 export const deleteBannerResponseException = (exception: AxiosError): string => {
     let retnValue: string = '';
     switch (exception.response?.status) {
         case 409: {
             retnValue = 'incorrect index send to server!';
+            break;
+        }
+        default: {
+            retnValue = 'internal error on server!';
+        }
+    }
+    return retnValue;
+}
+export const deleteCategoryResponseExceptions = (exception: AxiosError): string => {
+    let retnValue: string = '';
+    switch (exception.response?.status) {
+        case 409: {
+            retnValue = 'category linked with some banner!';
             break;
         }
         default: {
