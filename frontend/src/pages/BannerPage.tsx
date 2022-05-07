@@ -38,7 +38,7 @@ export const BannerPage: React.FC = (): JSX.Element => {
         if (selectedBanner?.id !== -1) {
             mutableSearchParam.append('createNew', 'false');
         }
-        else mutableSearchParam.append('createNew', 'false');
+        else mutableSearchParam.append('createNew', 'true');
         const responce = API.saveBanner(jwt, mutableSearchParam, selectedBanner);
         responce?.then(() => {
             updateBannersData(() => showMessage('save successed!', false));
