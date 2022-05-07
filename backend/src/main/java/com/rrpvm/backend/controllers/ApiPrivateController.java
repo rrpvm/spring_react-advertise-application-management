@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.transaction.UnexpectedRollbackException;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,7 +21,7 @@ import java.util.Optional;
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/api/private")
-public class ApiController {
+public class ApiPrivateController {
     @Autowired
     private BannerRepository bannerRepository;
     @Autowired
@@ -33,13 +32,6 @@ public class ApiController {
         List<Banner> banners = bannerRepository.findAllByIsDeleted(false);
         return banners;
     }
-
-    @GetMapping("/getCategories")
-    private List<Category> responseCategories() {
-        List<Category> categories = categoryRepository.findAllByDeleted(false);
-        return categories;
-    }
-
     @PutMapping("/banners/save/{id}")
     private ResponseEntity<Nullable> saveBanner(@PathVariable("id") Long id, @RequestBody Banner customBanner, @RequestParam(name = "createNew") boolean params) throws UniqueNameAlreadyExist {
         if (customBanner == null) return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(null);
@@ -53,7 +45,6 @@ public class ApiController {
         } else throw new UniqueNameAlreadyExist();
         return ResponseEntity.ok(null);
     }
-
     @PutMapping("/categories/save/{id}")
     private ResponseEntity<Nullable> saveCategory(@PathVariable("id") Long id, @RequestBody Category customCategory, @RequestParam(name = "createNew") String params) throws UnUniqueDataRequestedException {
         if (customCategory == null) return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(null);
