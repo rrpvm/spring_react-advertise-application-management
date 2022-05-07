@@ -35,14 +35,12 @@ public class AuthorizationController {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
     @Autowired
-    private JdbcUserDetailsService jdbcUserDetailsService;//UserDetailsService
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private UserRepository userRepository;
 
     @PostMapping(value = "${jwt.get.token.uri}")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AdminLoginRequest authenticationRequest) throws AuthenticationException/* do login*/ {
         this.doAuthenticate(authenticationRequest.getLogin(), authenticationRequest.getPassword());
-        final UserDetails userDetails = jdbcUserDetailsService.loadUserByUsername(authenticationRequest.getLogin());
+        final UserDetails userDetails = userRepository.findByLogin(authenticationRequest.getLogin());
         final String token = jwtTokenUtil.generateToken(userDetails);
         return ResponseEntity.ok(new JwtTokenResponse(token));
     }
@@ -50,6 +48,7 @@ public class AuthorizationController {
     @GetMapping(value = "${jwt.refresh.token.uri}")
     public ResponseEntity<?> refreshAuthenticationToken(HttpServletRequest request) {
         String authToken = request.getHeader(tokenHeader);
+        if(authToken == null || authToken.length() < 7)return ResponseEntity.badRequest().body(null);
         final String token = authToken.substring(7);
         if (jwtTokenUtil.canTokenBeRefreshed(token)) {
             String refreshedToken = jwtTokenUtil.refreshToken(token);

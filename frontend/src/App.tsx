@@ -1,19 +1,19 @@
 import './App.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
-import { NavigationBar } from './components/NavigationBar';
-import { BannerPage } from './pages/BannerPage';
-import { CategoryPage } from './pages/CategoryPage';
-import { LoginPage } from './pages/LoginPage';
+import { AdminLayout } from './components/AdminLayout';
+import { PageNotFound } from './pages/PageNotFound';
+import { HomePage } from './pages/Home';
 function App() {
   return (
     <Router>
-      <NavigationBar></NavigationBar>
       <Routes>
-        <Route path='/' element="HomePage"></Route>
-        <Route path='/banners' element={<BannerPage/>}></Route>
-        <Route path='/categories'  element={<CategoryPage/>}></Route>
-        <Route path='/login'  element={<LoginPage/>}></Route>
-        <Route path='*' element="PageNotFound"></Route>
+        <Route path='/admin/*' element={
+          <AdminLayout></AdminLayout>
+        }>        
+        </Route>
+        <Route path='/' element={<HomePage></HomePage>}></Route>
+        <Route path='/home' element={<HomePage></HomePage>}></Route>
+        <Route path='*' element={<PageNotFound></PageNotFound>}></Route>
       </Routes>
     </Router>
   );

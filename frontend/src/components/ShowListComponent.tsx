@@ -1,17 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IBanner } from "../interfaces/IBanner";
+import { ICategory } from "../interfaces/ICategory";
 
 
 type ListComponentProps = {
     title: string;//title of component
-    //actionButtonName: string,//name of 'create button'
     onSearchNameCallback: CallableFunction;//calls parent' filter function on search
-    itemsList: IBanner[],//list of items to show
-    activeItemId: number,//active item id
+    itemsList: IBanner[] | ICategory[],//list of items to show
     onItemClickCallback: CallableFunction,//calls parent' function by click on any showed banner
 }
-export const ShowListComponent: React.FC<React.PropsWithChildren<ListComponentProps>> = ({ title, onSearchNameCallback, itemsList, activeItemId, onItemClickCallback, children }) => {
+export const ShowListComponent: React.FC<React.PropsWithChildren<ListComponentProps>> = ({ title, onSearchNameCallback, itemsList, onItemClickCallback, children }) => {
     const [searchValue, setSearchValue] = useState('');
+    const [activeItem, setActiveItem] = useState<IBanner | ICategory>(itemsList[0]);
+    useEffect(()=>{
+        setActiveItem(itemsList[0]);
+    },[itemsList])//DidMount();
     let processInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
         setSearchValue(e.target.value);
         onSearchNameCallback(e.target.value.toLocaleLowerCase());
@@ -24,10 +27,10 @@ export const ShowListComponent: React.FC<React.PropsWithChildren<ListComponentPr
                 {
                     itemsList.map((item) => {
                         return (
-                            <li className={activeItemId === item.id ? "list-group-item active" : "list-group-item hoverable"}
+                            <li className={activeItem === item ? "list-group-item active" : "list-group-item hoverable"}
                                 style={{ cursor: "pointer", }}
                                 key={item.id}
-                                onClick={() => { onItemClickCallback(item) }}>{item.name}
+                                onClick={() => { onItemClickCallback(item);setActiveItem(item) }}>{item.name}
                             </li>
                         );
                     })

@@ -25,7 +25,7 @@ public class JwtTokenUtil implements Serializable {
     @Value("${jwt.token.expiration.in.seconds}")
     private Long expiration;
 
-    public String getUsernameFromToken(String token) throws ExpiredJwtException {
+    public String getUsernameFromToken(String token) throws ExpiredJwtException,MalformedJwtException {
         return getClaimFromToken(token, Claims::getSubject);
     }
 
@@ -37,12 +37,12 @@ public class JwtTokenUtil implements Serializable {
         return getClaimFromToken(token, Claims::getExpiration);
     }
 
-    public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) throws ExpiredJwtException  {
+    public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) throws ExpiredJwtException,MalformedJwtException  {
         final Claims claims = getAllClaimsFromToken(token);
         return claimsResolver.apply(claims);
     }
 
-    private Claims getAllClaimsFromToken(String token) throws ExpiredJwtException{
+    private Claims getAllClaimsFromToken(String token) throws ExpiredJwtException,MalformedJwtException{
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
     }
 
