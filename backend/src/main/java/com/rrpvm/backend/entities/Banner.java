@@ -1,11 +1,10 @@
 package com.rrpvm.backend.entities;
-
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.List;
+import java.util.Set;
+
 @Entity
 @Table(name = "banners")
 public class Banner {
@@ -22,12 +21,21 @@ public class Banner {
     @Column(name = "is_deleted",columnDefinition = "bit default 0")
     private boolean isDeleted;
     @ManyToMany(targetEntity = Category.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "banners_categories",
+   /* @JoinTable(name = "banners_categories",
             joinColumns = @JoinColumn(name = "id"),
-            inverseJoinColumns = @JoinColumn(name = "categories_id"))
+            inverseJoinColumns = @JoinColumn(name = "categories_id"))*/
+    @JoinTable(
+            name = "banners_categories",
+            joinColumns = {
+                    @JoinColumn(name = "banner_id", referencedColumnName = "id", nullable = false, unique = false)
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false, unique = false)
+            }
+    )
     @JsonIgnore//break infinity loop
-    private List<Category> categories;//names
-    public Banner(Long id, String name, String textField, Double price, boolean isDeleted, List<Category> linkedCategories) {
+    private Set<Category> categories;//names
+    public Banner(Long id, String name, String textField, Double price, boolean isDeleted, Set<Category> linkedCategories) {
         this.id = id;
         this.name = name;
         this.textField = textField;
@@ -35,7 +43,7 @@ public class Banner {
         this.isDeleted = isDeleted;
         this.categories = linkedCategories;
     }
-    public Banner( String name, String textField, Double price, boolean isDeleted, List<Category> linkedCategories) {
+    public Banner( String name, String textField, Double price, boolean isDeleted, Set<Category> linkedCategories) {
         this.name = name;
         this.textField = textField;
         this.price = price;
@@ -85,11 +93,11 @@ public class Banner {
         isDeleted = deleted;
     }
 
-    public List<Category> getLinkedCategories() {
+    public Set<Category> getLinkedCategories() {
         return categories;
     }
 
-    public void setLinkedCategories(List<Category> linkedCategories) {
+    public void setLinkedCategories(Set<Category> linkedCategories) {
         this.categories = linkedCategories;
     }
     @Override

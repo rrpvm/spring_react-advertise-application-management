@@ -33,7 +33,7 @@ public class CustomizeCategoryRepositoryImpl implements CustomizeCategoryReposit
     @Override
     public boolean isUndependent(Long categoryId) {
         boolean result = true;
-        Query query = entityManager.createNativeQuery("select banners_categories.id from banners_categories where categories_id = ?1");
+        Query query = entityManager.createNativeQuery("select banners_categories.banner_id from banners_categories where category_id = ?1");
         query.setParameter(1, categoryId);
         List<Long> bannersConnectedIds = query.getResultList();
         return bannersConnectedIds.isEmpty();
