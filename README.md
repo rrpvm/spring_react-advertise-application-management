@@ -27,8 +27,9 @@
 ### Backend installation and launching
 
 #### 1. open `backend` folder
-#### 2. `mvn package` to build server application
-#### 3. `java -jar target/backend-0.0.1-SNAPSHOT.jar`
+#### 2. `src\main\resources` -> application.properties -> change `spring.datasource.url` to your db url
+#### 3. `mvn package` to build server application
+#### 4. `java -jar target/backend-0.0.1-SNAPSHOT.jar`
 
 ## 3. Resume
 #### after launching process open [client app]('http://localhost:3000')
