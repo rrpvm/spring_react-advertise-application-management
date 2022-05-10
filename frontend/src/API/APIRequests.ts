@@ -58,7 +58,7 @@ class API {
     };
     deleteBanner(jwtToken: string, id: number | undefined) {
         if (id === undefined || id <= 0) return;
-        const request = axios.delete<string>(`${this.urlPrivate}/banners/delete/${id}`, requestConfigFabric(jwtToken));
+        const request = axios.put<string>(`${this.urlPrivate}/banners/delete/${id}`, requestConfigFabric(jwtToken));
         return request;
     };
     deleteCategory(jwtToken: string, id: number | undefined) {

@@ -66,7 +66,7 @@ public class ApiPrivateController {
         return ResponseEntity.ok(null);
     }
 
-    @DeleteMapping("/banners/delete/{id}")
+    @PutMapping("/banners/delete/{id}")
     private ResponseEntity<Nullable> deleteBanner(@PathVariable("id") Long id) throws IncorrectIdException { //updateMapping because updates the field (is_deleted) : | still delete mapping
         if (bannerRepository.findById(id).isEmpty()) {//different banners but existed name, in save() will be test by id (finds the id's)
             throw new IncorrectIdException();
