@@ -43,6 +43,10 @@ export const saveBannerResponceExceptions = (exception: AxiosError): string => {
             retnValue = 'linked categories cannot be empty!';
             break;
         }
+        case 417: {
+            retnValue = 'name or text field must be longer than 2 characters!';
+            break;
+        }
         default: {
             retnValue = 'internal error on server!';
         }
@@ -58,6 +62,10 @@ export const saveCategoryResponseExceptions = (exception: AxiosError): string =>
         }
         case 402: {
             retnValue = 'category name | request id cannot be empty!';
+            break;
+        }
+        case 417: {
+            retnValue = 'name or requestId must be longer than 2 characters!';
             break;
         }
         default: {

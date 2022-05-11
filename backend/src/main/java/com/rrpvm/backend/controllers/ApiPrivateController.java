@@ -36,6 +36,7 @@ public class ApiPrivateController {
     private ResponseEntity<Nullable> saveBanner(@PathVariable("id") Long id, @RequestBody Banner customBanner, @RequestParam(name = "createNew") boolean params) throws UniqueNameAlreadyExist {
         if (customBanner == null) return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(null);
         if (customBanner.getLinkedCategories().size() == 0) throw new BannerLinkedCategoriesEmpty();
+        if(customBanner.getName().trim().length() < 2 || customBanner.getTextField().trim().length() < 2)return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(null);
         Banner withUniqueName = bannerRepository.findBannerByName(customBanner.getName());
         boolean bUnique = withUniqueName == null || withUniqueName.getId() == customBanner.getId();
         if (bUnique) {
@@ -48,6 +49,7 @@ public class ApiPrivateController {
     @PutMapping("/categories/save/{id}")
     private ResponseEntity<Nullable> saveCategory(@PathVariable("id") Long id, @RequestBody Category customCategory, @RequestParam(name = "createNew") String params) throws UnUniqueDataRequestedException {
         if (customCategory == null) return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(null);
+        if (customCategory.getName().trim().length() < 2 || customCategory.getRequestId().trim().length() < 2) return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(null);
         Category withUniqueName = categoryRepository.findCategoryByName(customCategory.getName());
         Category withUniqueRequestId = categoryRepository.findCategoryByRequestId(customCategory.getRequestId());
         boolean isUnique = (withUniqueName == null || withUniqueName.getId() == customCategory.getId()) && (withUniqueRequestId == null || withUniqueRequestId.getId() == customCategory.getId());
